@@ -1,0 +1,83 @@
+table {
+/*	font-family: arial, sans-serif;*/
+/*font-family: 'Roboto Mono', monospace;*/
+	border-collapse: collapse;
+	width: 100%;
+/*	margin-bottom: 4em;	*/
+}
+
+td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+	background-color: #dddddd;
+}
+
+
+
+.yo {
+float: right;
+}
+
+body {
+
+/*    min-height: 100vh;*/
+
+/*    display: flex;
+    flex-direction: column;*/
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+footer{
+	background-color: #EEEEEE;
+	/*margin-top: auto;*/
+	position: 
+/*	fixed;*/
+/*follows but goes up and down tooo*/
+/*absolute;*/
+/*stays in one place */
+/*sticky;*/
+relative;
+/*static;*/
+	bottom: 0;
+	width: 100%;   
+	padding: .3rem;
+
+
+}
+
+.footer_string h4 {
+	color: black;
+}
+
+.footer_string{
+	padding-left: .5em;
+	padding-right: .5em;
+}
+
+.left{
+	float: left;
+}
+
+.right{
+	float: right;
+}
+
+hr{
+	margin-top: 0;
+	margin-bottom: .2em;
+	background-color: black;
+}
+.contact_email{
+
+    color:black;
+
+}
+
+.contact_email:hover{
+    color: #0F3460;
+}

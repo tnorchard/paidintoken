@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<?php
+$site =  "https://www.bitstamp.net/api/ticker/";
+$getcontent = file_get_contents($url);
+$decoding = json_decode($getcontent, true);
+
+$price = $decoding["last"];
+?>
+
+<html>
+<header>
+<p><h1><b>Money Man’s Investment</b></h1></p>
+</header>
+<body>
+Money Man was paid an advance of <b>14.72303252</b> Bitcoin or <b>$1,000,000</b> on <b>November 9th, 2021</b>. This same <b>14.72303252</b> bitcoin is currently worth _____.<br><br>
+
+This means he’s made/lost _____ <br><br>
+For a _____% loss/profit
+<br><br>
+
+  
+<h4>The Current Price of Bitcoin is currently...</h4> <br> 
+<?php echo $price; ?>
+
+ 
+  
+</body>
+</html>

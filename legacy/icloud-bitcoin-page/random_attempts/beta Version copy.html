@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	console.log('jquery ran');
+	$.get('https://www.bitstamp.net/api/ticker', function(response) {
+		console.log(response);
+		console.log(response.last);
+		moneymanbits = 14.72303252;
+		moneymanprice = Math.round((moneymanbits * response.last)*100)/100
+		moneymangreenred=Math.round((1000000-moneymanprice)*100)/100
+		moneymanpercent=Math.round(((moneymangreenred / 1000000) * 100)*100)/100
+		$("[name='percent']").text(moneymanpercent);
+		$("[name='greenred']").text(moneymangreenred);
+		$("[name='moneyman']").text(moneymanprice);
+		$("[name='myInput']").text(response.last);
+	});
+
+});
+</script>
+</head>
+<html>
+<header>
+<p><h1>Famous Bitcoin Payments</h1></p>
+</header>
+<body>
+<h4>The Current Price of Bitcoin is currently...<br> $<var name="myInput"></var> </h4>
+
+<br><br>
+<span class="introparagraph">Many celebrities have been paid in bitcoin. Some have gotten entire checks or half of one in bitcoin. </span><br><br>
+<span class="celebritiespaid"> Some of these celebrities include OBJ, MoneyMan, and Major Eric Adams.</span><br><br>
+
+<span class="celebrities"> 
+	<span class="celeb1"> Money Man was paid an advance of <b>14.72303252</b> Bitcoin or <b>$1,000,000</b> on <b>November 9th, 2021</b>. <br><br>These same <b>14.72303252</b> bitcoins are currently worth <b>$<var name="moneyman"></var></b>.<br><br>
+	This means he’s made/lost <b>$<var name="greenred"></var></b>
+	<br><br>
+	For a <b><var name="percent"></var>%</b> loss/profit</span>
+
+	<br><br>
+
+
+<p><h3>Refresh for updated data!</h3></p>
+
+</body>
+</html>

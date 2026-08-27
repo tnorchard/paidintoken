@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+	$.get('last_price_file', function(response) {
+		console.log(response);
+		$("[name='myInput']").text(response)})
+
+</script>
+
+<script type="text/javascript">
+var intervalId = window.setInterval(function(){
+
+
+	$.get('last_price_file', function(response) {
+		console.log(response);
+		// console.log(response.last);
+
+		
+
+		var database = [
+	    {name:'MoneyMan ',numbits:14.72303252 ,sumpaid:1000000 ,date:'Nov 9th 2021' ,pricebought:67920.7900031182 ,transaction:'paid an advance'},
+	    {name:'OBJ ',numbits:11.7 ,sumpaid:750000 ,date:'Nov 12th 2021' ,pricebought:64102.5641025641 ,transaction:'entire salary'},
+	    {name:'Mayor Eric Adams ',numbits:0.22504532334 ,sumpaid:8850 ,date:'Jan. 21, Feb. 4, and Feb. 18' ,pricebought:39325.4117377474 ,transaction:'Paid first 3 checks'},
+	    {name:'50 Cent ',numbits:700 ,sumpaid:460000 ,date:'June 2014' ,pricebought:657.142857142857 ,transaction:'accepted payments for his fifth album “Animal Ambition”'},
+	    {name:'Russell Okung ',numbits:240 ,sumpaid:6500000 ,date:'December 2020' ,pricebought:27083.3333333333 ,transaction:'converted his salary'},
+	    {name:'Francis Ngannou ',numbits:10.5577207486 ,sumpaid:375000 ,date:'January 22, 2022' ,pricebought:35519.0299998915 ,transaction:'paid half of his salary'},
+	    {name:'Cade Cunningham ',numbits:452.965337233 ,sumpaid:20602920 ,date:'August 19 2021' ,pricebought:45484.5400000268 ,transaction:'signing bonus '},
+	    {name:'Trevor Lawrence ',numbits:749.747337749 ,sumpaid:22630055 ,date:'July 20,2021' ,pricebought:30183.5750000036 ,transaction:'signing bonus '},
+	    {name:'Aaron Rodgers ',numbits:16.3781143189 ,sumpaid:1000000 ,date:'November 1, 2021' ,pricebought:61057.0900000387 ,transaction:'Giveaway'},
+	    {name:'Gwyneth Paltrow ',numbits:10.4167003039 ,sumpaid:500000 ,date:'44551' ,pricebought:47999.8450001293 ,transaction:'Giveaway'}
+		];
+
+		$("[name='myInput']").text(response);
+
+		htmlstring=''
+
+    	row_count = -1
+    // row_cell = -1
+
+		database.forEach(dict=> {
+			// currentvalue = Number(Math.round((dict['numbits'] * response.last)*100)/100)
+			// plsum=Number(Math.round((1000000-currentvalue)*100)/100)
+			// plpercent=Number(Math.round(((plsum / 1000000) * 100)*100)/100)
+
+		      currentvalue = Number(((dict['numbits'] * response)))
+		      plsum=Number(((dict['sumpaid']-currentvalue)))
+		      plpercent=Number(((plsum / dict['sumpaid']) * 100))
+
+
+					if (Number(currentvalue) < Number(dict['sumpaid'])) {
+						lp="loss"
+						ml='lost '
+					}
+					if (Number(currentvalue) > Number(dict['sumpaid'])){
+						lp="profit"
+						ml='made '
+					}
+
+			// printed=" -" + dict['name'] + dict['transaction'] + dict['numbits']+" bitcoins " + " or $" + dict['sumpaid'] + " on " + dict['date'] + ". These same " + dict['numbits'] + " bitcoins are currently worth " + currentvalue + ". This means " + dict['name'] + " has " + ml  + plsum + " for a " + plpercent+"% "+lp+"."
+			// htmlstring= htmlstring+printed+'<br><br>'
+			// document.getElementById('demo').appendChild(printed);
+
+
+      // var table = document.getElementById("stat_table");
+
+      // row_count+=.127
+
+      // row_cell+=1
+
+      // row_count=row_count*row_cell
+
+      // row_count=Math.floor(row_count)
+
+      // table.rows(row_count).cell(row_cell).innerHTML = dict['name'];
+
+      // if (row_cell > 7){
+      //   row_cell=0
+      // }
+
+      // if (row_count > 1){
+      //   row_count = 0
+      // }
+
+				      row_count+=1
+
+
+				      var table = document.getElementById("stat_table");
+
+
+				      var row = table.insertRow();
+
+
+				      var cell1 = row.insertCell();
+				      var cell2 = row.insertCell();
+				      var cell3 = row.insertCell();
+				      var cell4 = row.insertCell();
+				      var cell5 = row.insertCell();
+				      var cell6 = row.insertCell();
+				      var cell7 = row.insertCell();
+				      var cell8 = row.insertCell();
+
+
+				      cell1.innerHTML = dict['name'];
+				      cell2.innerHTML = dict['numbits'];
+				      cell3.innerHTML = dict['sumpaid'];
+				      cell4.innerHTML = dict['date'];
+				      cell5.innerHTML = dict['pricebought'];
+				      cell6.innerHTML = currentvalue;
+				      cell7.innerHTML = plsum;
+				      cell8.innerHTML = plpercent;
+
+				      // $("tbody#stat_table").replaceWith(row); 
+
+				      $("table tr:eq("+row_count+")").remove()
+      // $("#row1").remove();
+      // $("tbody#stat_table").eq(row_count).remove();
+
+      // if (row_count == 10){
+      //   row_count = 0
+      // }
+      
+
+
+
+
+
+   // var delete_data = row.deleteCell(0);
+
+      // var cell1 = row.cell[-1];
+      // var cell2 = row.cell[-1];
+      // var cell3 = row.cell[-1];
+      // var cell4 = row.cell[-1];
+      // var cell5 = row.cell[-1];
+      // var cell6 = row.cell[-1];
+      // var cell7 = row.cell[-1];
+      // var cell8 = row.cell[-1];
+
+
+      // function myFunction() {
+      //   document.getElementById("myTable").deleteRow(3);
+      // }
+
+			
+				
+				
+			
+		})
+		// document.getElementById("demo").innerHTML = htmlstring ;
+		// $('#demo').html(htmlstring+"<br><br>");
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+    // document.getElementById("stat_table").deleteRow(-1);
+
+
+      // document.getElementById("stat_table").deleteRow(0);
+      // document.getElementById("stat_table").deleteRow(0);
+      // document.getElementById("stat_table").deleteRow(0);
+      // document.getElementById("stat_table").deleteRow(0);
+      // document.getElementById("stat_table").deleteRow(0);
+      // document.getElementById("stat_table").deleteRow(0);
+      // document.getElementById("stat_table").deleteRow(0);   
+      // document.getElementById("stat_table").deleteRow(0);
+      // document.getElementById("stat_table").deleteRow(0);   
+      // document.getElementById("stat_table").deleteRow(0);
+
+
+
+	});
+
+
+  
+}, 5000);
+$(document).ready(function(){
+	console.log('jquery ran');
+
+
+});
+
+function myFunction() {
+    var x = document.getElementById("myText").value;
+    selectElement = document.querySelector('#span');
+    output = selectElement.value;
+  
+
+
+    if (output =='1m' ){
+    	idk=5500
+    }
+    if (output =='3m' ){
+    	idk=7500
+    }
+    if (output =='6m' ){
+    	idk=12500
+    }
+    if (output =='9m' ){
+    	idk=15550
+    }
+    if (output =='1y' ){
+    	idk=20000
+    }
+    newvalue = Number(Math.round((x * idk)*100)/100);
+
+    percent=((newvalue-x)/x)*100
+
+    if (newvalue < x){
+    	status='loss'
+    }
+    if (newvalue > x){
+    	status='gain'
+    }
+
+    glsentence=" This is a "+percent+"% "+status+"."
+
+    printedvalue="$"+newvalue+'.'+glsentence
+    document.getElementById("yikes").innerHTML = printedvalue;
+    //document.querySelector('.output').textContent = output;
+}
+
+
+
+</script>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<html>
+<header>
+
+<p><h1 align=right>Famous Bitcoin Payments</h1></p>
+
+</header>
+<body>
+<h4>The Current Price of Bitcoin is currently...</h4>
+<h1 > $<var name="myInput"></var> </h1>
+
+<br><br>
+<span class="introparagraph">Many celebrities have been paid in bitcoin. Some have gotten entire checks or half of one in bitcoin. </span><br><br>
+<span class="celebritiespaid"> Some of these celebrities include OBJ, MoneyMan, and Major Eric Adams.</span><br><br>	
+
+
+<p id="demo"></p>
+
+<br>
+
+
+<p>
+<h4><i>Hypothetical Investing</i></h4>
+
+If you would have invested $<input type="text" id="myText"> 
+
+<select id="span">
+<option value="1m">1 month ago</option>
+<option value="3m">3 months ago</option>
+<option value="6m">6 months ago</option>
+<option value="9m">9 months ago</option>
+<option value="1y">1 year ago</option>
+</select>
+
+<button onclick="myFunction()">Calculate</button>
+
+6 months ago, you would have made..
+
+<!---<p class="output"></p>--->
+<p id="yikes"></p>
+<br>
+<br>
+
+</p>
+
+<table>
+
+	<thead>
+
+	    <th>Person Name</th>
+	    <th>Number of Bits</th>
+	    <th>Sum Paid</th>
+	    <th>Date</th>
+	    <th>Price at Payment</th>
+	    <th>Current Value</th>
+	    <th>Profit/Loss</th>
+	    <th>Percent Gain/Loss</th>
+
+	</thead>
+
+
+
+  <!-- <tr>
+    <th>MoneyMan</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+  <tr>
+    <th>OBJ</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+  <tr>
+    <th>Mayor Eric Adams</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+  <tr>
+    <th>50 Cent</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+  <tr>
+    <th>Russell Okung</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+  <tr>
+    <th>Francis Ngannou</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+    <tr>
+    <th>Cade Cunningham</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+    <tr>
+    <th>Trevor Lawrence</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+    <tr>
+
+    <th>Aaron Rodgers</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+    <tr>
+
+    <th>Gwyneth Paltrow</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr> -->
+	<tbody id= "stat_table">
+		
+	</tbody>
+</table>
+
+
+
+
+<p>Visit <a href="https://coinbase.com/join/norale_u">Coinbase</a> to get started on crypto investing today.</p>
+<p><h4>Data updated every 5 seconds for your convenience.</h4></p>
+
+</body>
+</html>

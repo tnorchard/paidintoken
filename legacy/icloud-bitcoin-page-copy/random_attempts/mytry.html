@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	console.log('jquery ran');
+	$.get('https://www.bitstamp.net/api/ticker', function(response) {
+		console.log(response);
+		console.log(response.last);
+
+		
+
+		var database = [
+		{name:"Moneyman ",numbits:14.72303252,sumpaid:1000000,date:"April 7th",pricebought:43592.91,transaction:"was paid an advance of "},
+		{name:"OBJ ",numbits:11.7,sumpaid:750000,date:"April 7th",pricebought:43592.91,transaction:"was paid an advance of "},
+		{name:"50 Cent ",numbits:700,sumpaid:460000,date:"April 7th",pricebought:43592.91,transaction:"was paid an advance of "},
+		{name:"Russell Okung ",numbits:240,sumpaid:6500000,date:"April 7th",pricebought:43592.91,transaction:"was paid an advance of "}
+		];
+
+		$("[name='myInput']").text(response.last);
+
+		// htmlstring=''
+
+		database.forEach(dict=> {
+			currentvalue = Number(Math.round((dict['numbits'] * response.last)*100)/100)
+			plsum=Number(Math.round((1000000-currentvalue)*100)/100)
+			plpercent=Number(Math.round(((plsum / 1000000) * 100)*100)/100)
+
+
+			if (Number(currentvalue) < Number(dict['sumpaid'])) {
+				lp="loss"
+				ml='lost '
+			}
+			if (Number(currentvalue) > Number(dict['sumpaid'])){
+				lp="profit"
+				ml='made '
+			}
+
+			printed= dict['name'] + dict['transaction'] + dict['numbits']+" bitcoins " + " or $" + dict['sumpaid'] + " on " + dict['date'] + ". These same " + dict['numbits'] + " bitcoins are currently worth " + currentvalue + ". This means " + dict['name'] + " has " + ml  + plsum + " for a " + plpercent+"% "+lp+"."
+			// htmlstring= htmlstring+printed+'<br'
+			// document.getElementById('demo').appendChild(printed);
+			$('#demo').append(printed+"<br><br>");
+				
+				
+			
+		})
+		// document.getElementById("demo").innerHTML = htmlstring ;
+
+	});
+
+});
+</script>
+</head>
+<html>
+<header>
+
+<p><h1>Famous Bitcoin Payments</h1></p>
+
+</header>
+<body>
+<h4>The Current Price of Bitcoin is currently...<br> $<var name="myInput"></var> </h4>
+
+<br><br>
+<span class="introparagraph">Many celebrities have been paid in bitcoin. Some have gotten entire checks or half of one in bitcoin. </span><br><br>
+<span class="celebritiespaid"> Some of these celebrities include OBJ, MoneyMan, and Major Eric Adams.</span><br><br>	
+
+
+<p id="demo"></p>
+
+<br>
+
+<p><h3>Refresh for updated data!</h3></p>
+
+</body>
+</html>

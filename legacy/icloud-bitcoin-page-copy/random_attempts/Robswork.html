@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	console.log('jquery ran');
+	$.get('https://www.bitstamp.net/api/ticker', function(response) {
+		console.log(response);
+		console.log(response.last);
+		$("[name='myInput']").text(response.last);
+	});
+
+});
+</script>
+</head>
+<html>
+<header>
+<p><h1><b>Money Man’s Investment</b></h1></p>
+</header>
+<body>
+Money Man was paid an advance of <b>14.72303252</b> Bitcoin or <b>$1,000,000</b> on <b>November 9th, 2021</b>. This same <b>14.72303252</b> bitcoin is currently worth _____.<br><br>
+This means he’s made/lost _____ <br><br>
+For a _____% loss/profit
+<br><br>
+<h4>The Current Price of Bitcoin is currently...</h4><p name="myInput"></p> <br>
+<?php echo $price; ?>
+</body>
+</html>

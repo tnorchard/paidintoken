@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	console.log('jquery ran');
+	$.get('https://www.bitstamp.net/api/ticker', function(response) {
+		console.log(response);
+		console.log(response.last);
+
+		moneymanbits = 14.72303252;
+		moneymanprice = Math.round((moneymanbits * response.last)*100)/100
+		moneymangreenred=Math.round((1000000-moneymanprice)*100)/100
+		moneymanpercent=Math.round(((moneymangreenred / 1000000) * 100)*100)/100
+		$("[name='percent']").text(moneymanpercent);
+		$("[name='greenred']").text(moneymangreenred);
+		$("[name='moneyman']").text(moneymanprice);
+		$("[name='myInput']").text(response.last);
+
+		objbits= 11.7;
+		objprice=Math.round((objbits * response.last)*100)/100
+		objgreenred=Math.round((1000000-objprice)*100)/100
+		objpercent=Math.round(((objgreenred / 1000000) * 100)*100)/100
+
+		// $("[name='objprice']").text(objprice);
+		// $("[name='objgreenred']").text(objgreenred);
+		// $("[name='objpercent']").text(objpercent);
+
+		centsbits= 700;
+		centsprice=Math.round((centsbits * response.last)*100)/100
+		centsgreenred=Math.round((1000000-centsprice)*100)/100
+		centspercent=Math.round(((centsgreenred / 1000000) * 100)*100)/100
+
+		$("[name='centsprice']").text(centsprice);
+		$("[name='centsgreenred']").text(centsgreenred);
+		$("[name='centspercent']").text(centspercent);
+
+		okungbits= 240;
+		okungprice=Math.round((okungbits * response.last)*100)/100
+		okunggreenred=Math.round((1000000-okungprice)*100)/100
+		okungpercent=Math.round(((okunggreenred / 1000000) * 100)*100)/100
+
+		$("[name='okungprice']").text(okungprice);
+		$("[name='okunggreenred']").text(okunggreenred);
+		$("[name='okungpercent']").text(okungpercent);
+
+		var database = {
+			objbits:objbits,
+			objprice:objprice,
+			objgreenred:objgreenred,
+			objpercent:objpercent
+		}
+
+		// var objbits = database.objbits;
+		// var objprice = database.objprice;
+		// var objgreenred = database.objgreenred;
+		// var objpercent = database.objpercent;
+
+		$("[name='objbits']").text(objbits);
+		$("[name='objprice']").text(objprice);
+		$("[name='objgreenred']").text(objgreenred);
+
+
+	});
+
+});
+</script>
+</head>
+<html>
+<header>
+<p><h1>Famous Bitcoin Payments</h1></p>
+</header>
+<body>
+<h4>The Current Price of Bitcoin is currently...<br> $<var name="myInput"></var> </h4>
+
+<br><br>
+<span class="introparagraph">Many celebrities have been paid in bitcoin. Some have gotten entire checks or half of one in bitcoin. </span><br><br>
+<span class="celebritiespaid"> Some of these celebrities include OBJ, MoneyMan, and Major Eric Adams.</span><br><br>	<br><br>
+
+<span class="celebrities"> 
+	<span class="celeb1"> Money Man was paid an advance of <b>14.72303252</b> Bitcoin or <b>$1,000,000</b> on <b>November 9th, 2021</b>. <br><br>These same <b>14.72303252</b> bitcoins are currently worth <b>$<var name="moneyman"></var></b>.<br><br>
+	This means he’s made/lost <b>$<var name="greenred"></var></b>
+	<br><br>
+	For a <b><var name="percent"></var>%</b> loss/profit</span>
+	<br><br>
+	<br><br>
+
+	<span class="celeb2"> OBJ was paid an advance of <b>11.7</b> Bitcoin or <b>$1,000,000</b> on <b>November 9th, 2021</b>. <br><br>These same <b>11.7</b> bitcoins are currently worth <b>$<var name="objprice"></var></b>.<br><br>
+	This means he’s made/lost <b>$<var name="objgreenred"></var></b>
+	<br><br>
+	For a <b><var name="objpercent"></var>%</b> loss/profit</span>
+	<br><br>
+	<br><br>
+
+	<span class="celeb3"> 50 Cent was paid an advance of <b>700</b> Bitcoin or <b>$1,000,000</b> on <b>November 9th, 2021</b>. <br><br>These same <b>700</b> bitcoins are currently worth <b>$<var name="centsprice"></var></b>.<br><br>
+	This means he’s made/lost <b>$<var name="centsgreenred"></var></b>
+	<br><br>
+	For a <b><var name="centspercent"></var>%</b> loss/profit</span>
+	<br><br>
+	<br><br>
+
+	<span class="celeb4"> Russell Okung was paid an advance of <b>240</b> Bitcoin or <b>$1,000,000</b> on <b>November 9th, 2021</b>. <br><br>These same <b>240</b> bitcoins are currently worth <b>$<var name="okungprice"></var></b>.<br><br>
+	This means he’s made/lost <b>$<var name="okunggreenred"></var></b>
+	<br><br>
+	For a <b><var name="okungpercent"></var>%</b> loss/profit</span>
+	<br><br>
+
+
+<p><h3>Refresh for updated data!</h3></p>
+
+</body>
+</html>

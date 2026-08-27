@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+var intervalId = window.setInterval(function(){
+
+	$.get('https://www.bitstamp.net/api/ticker', function(response) {
+		console.log(response);
+		console.log(response.last);
+
+		
+
+		var database = [
+		{name:"Moneyman ",numbits:14.72303252,sumpaid:1000000,date:"April 7th",pricebought:43592.91,transaction:"was paid an advance of "},
+		{name:"OBJ ",numbits:11.7,sumpaid:750000,date:"April 7th",pricebought:43592.91,transaction:"was paid his entire salary of "},
+		{name:"50 Cent ",numbits:700,sumpaid:460000,date:"April 7th",pricebought:662,transaction:"accepted payments for his fifth album - a total of  "},
+		{name:"Russell Okung ",numbits:240,sumpaid:6500000,date:"April 7th",pricebought:43592.91,transaction:"was paid an advance of "}
+		];
+
+		$("[name='myInput']").text(response.last);
+
+		htmlstring=''
+
+		database.forEach(dict=> {
+			currentvalue = Number(Math.round((dict['numbits'] * response.last)*100)/100)
+			plsum=Number(Math.round((1000000-currentvalue)*100)/100)
+			plpercent=Number(Math.round(((plsum / 1000000) * 100)*100)/100)
+
+
+			if (Number(currentvalue) < Number(dict['sumpaid'])) {
+				lp="loss"
+				ml='lost '
+			}
+			if (Number(currentvalue) > Number(dict['sumpaid'])){
+				lp="profit"
+				ml='made '
+			}
+
+			printed=" -" + dict['name'] + dict['transaction'] + dict['numbits']+" bitcoins " + " or $" + dict['sumpaid'] + " on " + dict['date'] + ". These same " + dict['numbits'] + " bitcoins are currently worth " + currentvalue + ". This means " + dict['name'] + " has " + ml  + plsum + " for a " + plpercent+"% "+lp+"."
+			htmlstring= htmlstring+printed+'<br><br>'
+			// document.getElementById('demo').appendChild(printed);
+			
+				
+				
+			
+		})
+		// document.getElementById("demo").innerHTML = htmlstring ;
+		$('#demo').html(htmlstring+"<br><br>");
+	});
+
+  
+}, 5000);
+$(document).ready(function(){
+	console.log('jquery ran');
+
+
+});
+
+function myFunction() {
+    var x = document.getElementById("myText").value;
+    selectElement = document.querySelector('#span');
+    output = selectElement.value;
+  
+
+
+    if (output =='1m' ){
+    	idk=5500
+    }
+    if (output =='3m' ){
+    	idk=7500
+    }
+    if (output =='6m' ){
+    	idk=12500
+    }
+    if (output =='9m' ){
+    	idk=15550
+    }
+    if (output =='1y' ){
+    	idk=20000
+    }
+    newvalue = Number(Math.round((x * idk)*100)/100);
+
+    percent=((newvalue-x)/x)*100
+
+    if (newvalue < x){
+    	status='loss'
+    }
+    if (newvalue > x){
+    	status='gain'
+    }
+
+    glsentence=" This is a "+percent+"% "+status+"."
+
+    printedvalue="$"+newvalue+'.'+glsentence
+    document.getElementById("yikes").innerHTML = printedvalue;
+    //document.querySelector('.output').textContent = output;
+}
+
+</script>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<html>
+<header>
+
+<p><h1>Famous Bitcoin Payments</h1></p>
+
+</header>
+<body>
+<h4>The Current Price of Bitcoin is currently...<br> $<var name="myInput"></var> </h4>
+
+<br><br>
+<span class="introparagraph">Many celebrities have been paid in bitcoin. Some have gotten entire checks or half of one in bitcoin. </span><br><br>
+<span class="celebritiespaid"> Some of these celebrities include OBJ, MoneyMan, and Major Eric Adams.</span><br><br>	
+
+
+<p id="demo"></p>
+
+<br>
+
+
+<p>
+<h4><i>Hypothetical Investing</i></h4>
+
+If you would have invested $<input type="text" id="myText"> 
+
+<select id="span">
+<option value="1m">1 month ago</option>
+<option value="3m">3 months ago</option>
+<option value="6m">6 months ago</option>
+<option value="9m">9 months ago</option>
+<option value="1y">1 year ago</option>
+</select>
+
+<button onclick="myFunction()">Calculate</button>
+
+6 months ago, you would have made..
+
+<!---<p class="output"></p>--->
+<p id="yikes"></p>
+<br>
+<br>
+
+</p>
+
+
+<table>
+  <tr>
+    <th>Person Picture</th>
+    <th>Person Name</th>
+    <th>Number of Bits</th>
+    <th>Sum Paid</th>
+    <th>Date</th>
+    <th>Price at Payment</th>
+    <th>Current Value</th>
+    <th>Profit/Loss</th>
+    <th>Percent Gain/Loss</th>
+  </tr>
+  <tr>
+    <td>Alfreds Futterkiste</td>
+    <td>Maria Anders</td>
+    <td>Germany</td>
+  </tr>
+  <tr>
+    <td>Centro comercial Moctezuma</td>
+    <td>Francisco Chang</td>
+    <td>Mexico</td>
+  </tr>
+  <tr>
+    <td>Ernst Handel</td>
+    <td>Roland Mendel</td>
+    <td>Austria</td>
+  </tr>
+  <tr>
+    <td>Island Trading</td>
+    <td>Helen Bennett</td>
+    <td>UK</td>
+  </tr>
+  <tr>
+    <td>Laughing Bacchus Winecellars</td>
+    <td>Yoshi Tannamuri</td>
+    <td>Canada</td>
+  </tr>
+  <tr>
+    <td>Magazzini Alimentari Riuniti</td>
+    <td>Giovanni Rovelli</td>
+    <td>Italy</td>
+  </tr>
+</table>
+
+
+<p>Visit <a href="https://coinbase.com/join/norale_u">Coinbase</a> to get started on crypto investing today.</p>
+<p><h4>Data updated every 5 seconds for your convenience.</h4></p>
+
+</body>
+</html>
