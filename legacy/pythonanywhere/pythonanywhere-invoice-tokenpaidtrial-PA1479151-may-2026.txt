@@ -1,0 +1,53 @@
+================== INVOICE ==================
+Tax date:       5 May 2026
+Invoice number: PA1479151
+
+
+This invoice is for your records, payment will occur automatically, and no
+action is necessary on your part.
+
+You can cancel the monthly charges at any time by visiting your Account page on
+PythonAnywhere and clicking on the "Downgrade to a free account" button on the
+"Upgrade/Downgrade Account" tab.
+
+
+Invoice from:
+PythonAnywhere LLP
+5 The Green
+Richmond
+TW9 1PL
+United Kingdom
+UK VAT No.: 893564379
+
+Invoice to:
+Dexter Norales
+8103 S Spruce Ct
+Centennial
+80112
+United States
+
+
+
+Invoice for: PythonAnywhere account monthly subscription
+for account tokenpaidtrial
+
+
+Total price: US$8.00
+
+
+
+
+Thanks for using our site!
+
+The PythonAnywhere team
+--
+PythonAnywhere: Develop and host Python from your browser
+https://www.pythonanywhere.com/
+<<<<<<:>~
+A product from PythonAnywhere LLP
+UK VAT No.: 893564379
+EU VAT No.: EU372015865
+Registered in England and Wales as company number OC378414.
+Registered address: 5 The Green, Richmond, TW9 1PL, UK
+
+

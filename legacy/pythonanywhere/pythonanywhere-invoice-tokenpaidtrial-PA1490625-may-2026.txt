@@ -1,0 +1,45 @@
+================== CREDIT NOTE ==================
+Tax date:       21 May 2026
+Invoice number: PA1490625
+
+
+
+Invoice from:
+PythonAnywhere LLP
+5 The Green
+Richmond
+TW9 1PL
+United Kingdom
+UK VAT No.: 893564379
+
+Invoice to:
+Dexter Norales
+8103 S Spruce Ct
+Centennial
+80112
+United States
+
+
+
+This credit note reverses invoice number PA1479151
+
+
+Total price: US$-8.00
+
+
+
+
+Thanks for using our site!
+
+The PythonAnywhere team
+--
+PythonAnywhere: Develop and host Python from your browser
+https://www.pythonanywhere.com/
+<<<<<<:>~
+A product from PythonAnywhere LLP
+UK VAT No.: 893564379
+EU VAT No.: EU372015865
+Registered in England and Wales as company number OC378414.
+Registered address: 5 The Green, Richmond, TW9 1PL, UK
+
+

@@ -22,6 +22,7 @@
 
 # misc
 .DS_Store
+legacy/**/.git
 *.pem
 
 # debug

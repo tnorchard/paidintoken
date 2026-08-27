@@ -1,0 +1,190 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+.pause_notice {
+    color: black;
+    text-align: center;
+    padding: 1em;
+}
+
+.yo {
+    float: right;
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    table, td, th {
+        font-size: 0.9em;
+    }
+
+    .yo {
+        float: none;
+        text-align: center;
+    }
+
+    .pause_notice {
+        padding: 0.5em;
+    }
+
+    /* Hide columns beyond the fourth one */
+    table tr th:nth-child(n+5),
+    table tr td:nth-child(n+5) {
+        display: none;
+    }
+
+	.hover_paragraph{
+		text-align: center;
+	}
+}
+
+@media (max-width: 480px) {
+    table, td, th {
+        font-size: 0.8em;
+    }
+
+    .pause_notice {
+        padding: 0.25em;
+    }
+
+    /* Hide columns beyond the fourth one */
+    table tr th:nth-child(n+5),
+    table tr td:nth-child(n+5) {
+        display: none;
+    }
+
+	.hover_paragraph{
+		text-align: center;
+	}
+
+}@media (max-width: 768px) {
+    table, td, th {
+        font-size: 0.9em;
+    }
+
+    .yo {
+        float: none;
+        text-align: center;
+    }
+
+    .pause_notice {
+        padding: 0.5em;
+    }
+
+    /* Hide columns beyond the fourth one */
+    table tr th:nth-child(n+5),
+    table tr td:nth-child(n+5) {
+        display: none;
+    }
+
+    /* Hide the second column */
+    table tr th:nth-child(2),
+    table tr td:nth-child(2) {
+        display: none;
+    }
+
+	.hover_paragraph{
+		text-align: center;
+	}
+}
+
+@media (max-width: 480px) {
+    table, td, th {
+        font-size: 0.8em;
+    }
+
+    .pause_notice {
+        padding: 0.25em;
+    }
+
+    /* Hide columns beyond the fourth one */
+    table tr th:nth-child(n+5),
+    table tr td:nth-child(n+5) {
+        display: none;
+    }
+
+    /* Hide the second column */
+    table tr th:nth-child(2),
+    table tr td:nth-child(2) {
+        display: none;
+    }
+
+	.hover_paragraph{
+		text-align: center;
+	}
+}
+
+footer {
+    background-color: #EEEEEE;
+    /*margin-top: auto;*/
+    position: 
+    /*fixed;*/
+    /*follows but goes up and down tooo*/
+    /*absolute;*/
+}
+
+footer{
+	background-color: #EEEEEE;
+	/*margin-top: auto;*/
+	position: 
+/*	fixed;*/
+/*follows but goes up and down tooo*/
+/*absolute;*/
+/*stays in one place */
+/*sticky;*/
+relative;
+/*static;*/
+	bottom: 0;
+	width: 100%;   
+	padding: .3rem;
+
+
+}
+
+.footer_string h4 {
+	color: black;
+}
+
+.footer_string{
+	padding-left: .5em;
+	padding-right: .5em;
+}
+
+.left{
+	float: left;
+}
+
+.right{
+	float: right;
+}
+
+hr{
+	margin-top: 0;
+	margin-bottom: .2em;
+	background-color: black;
+}
+.contact_email{
+
+    color:black;
+
+}
+
+.contact_email:hover{
+    color: #0F3460;
+}
