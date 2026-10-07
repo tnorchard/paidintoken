@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { FaqBlock } from "@/components/FaqBlock";
 import { getNews } from "@/lib/news";
 
 export const revalidate = 300;
@@ -76,6 +77,24 @@ export default async function NewsPage() {
         </Link>
         .
       </p>
+
+      <FaqBlock
+        title="FAQ · Crypto News"
+        items={[
+          {
+            q: "Where do these stories come from?",
+            a: "Official RSS feeds from CoinDesk, Cointelegraph, Decrypt, and The Block. PaidinToken never rewrites or republishes articles — every headline opens the original story on the publisher's site.",
+          },
+          {
+            q: "How often does this feed update?",
+            a: "Every five minutes. New articles appear here within minutes of publication, deduplicated across sources and sorted newest first.",
+          },
+          {
+            q: "Why are only the last 30 stories shown?",
+            a: "The archive keeps the freshest headlines for quick scanning. Older pieces live on the publishers' own sites — use each source's search if you need deeper history.",
+          },
+        ]}
+      />
     </main>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { FaqBlock } from "@/components/FaqBlock";
 import { glossary } from "@/data/glossary";
 
 export const dynamicParams = true;
@@ -71,6 +72,8 @@ export default async function LearnPage({ params }: LearnPageProps) {
           </p>
         ))}
       </div>
+
+      <FaqBlock items={entry.faq} title={`FAQ · ${entry.term}`} />
 
       <section className="mt-8 rounded-lg border border-line bg-card p-4">
         <h2 className="text-sm font-bold uppercase tracking-wider">

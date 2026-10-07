@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BtcCalculator } from "@/components/BtcCalculator";
+import { FaqBlock } from "@/components/FaqBlock";
 import { getBitcoinPrice } from "@/lib/bitcoin";
 
 export const revalidate = 300;
@@ -14,6 +15,25 @@ export const metadata: Metadata = {
 };
 
 const TABLE_AMOUNTS = [0.001, 0.01, 0.1, 0.5, 1, 5, 10, 50, 100];
+
+const FAQ_ITEMS = [
+  {
+    q: "Where does this exchange rate come from?",
+    a: "CoinGecko's volume-weighted average of bitcoin across hundreds of exchanges. PaidinToken refreshes it every 60 seconds, so it tracks the live market rather than a fixed daily rate.",
+  },
+  {
+    q: "Why is my exchange's price slightly different?",
+    a: "Every venue quotes its own price, and exchanges add a spread and fees on top of the market rate. Differences of a fraction of a percent are normal; larger gaps usually mean illiquid markets.",
+  },
+  {
+    q: "How do I convert US dollars back to bitcoin?",
+    a: "Divide the dollar amount by the BTC price shown above — for example, $500 at a $80,000 bitcoin price is 0.00625 BTC. The calculator above does this math for any amount.",
+  },
+  {
+    q: "Does PaidinToken charge a fee for converting?",
+    a: "No. This is a free reference tool — no bitcoin changes hands here, and no account is required. Any actual conversion happens on the exchange or wallet you use.",
+  },
+];
 
 export default async function BtcToUsdPage() {
   const btc = await getBitcoinPrice();
@@ -121,6 +141,7 @@ export default async function BtcToUsdPage() {
           with charts, supply, and all-time highs.
         </p>
       </section>
+      <FaqBlock items={FAQ_ITEMS} title="FAQ · BTC to USD" />
     </main>
   );
 }

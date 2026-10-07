@@ -2,6 +2,7 @@ import Link from "next/link";
 
 interface FooterProps {
   showOgLink?: boolean;
+  compact?: boolean;
 }
 
 const columns = [
@@ -22,7 +23,7 @@ const columns = [
       { label: "Crypto 101", href: "/#learn" },
       { label: "Paid in Token Guide", href: "/learn/paid-in-token" },
       { label: "Bitcoin Halving", href: "/learn/bitcoin-halving" },
-      { label: "FAQ", href: "/faq" },
+      { label: "FAQ", href: "/#faq" },
     ],
   },
   {
@@ -36,8 +37,24 @@ const columns = [
   },
 ] as const;
 
-export function Footer({ showOgLink = true }: FooterProps) {
+export function Footer({ showOgLink = true, compact = false }: FooterProps) {
   const year = new Date().getFullYear();
+
+  if (compact) {
+    return (
+      <footer className="mt-8 w-full border-t border-line bg-card px-2 py-3">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-2">
+          <h4 className="text-sm font-medium">PaidinToken ™ {year}</h4>
+          <a
+            href="mailto:admin@paidintoken.com"
+            className="contact-email text-sm font-medium hover:text-accent"
+          >
+            admin@paidintoken.com
+          </a>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="mt-8 w-full border-t border-line bg-card px-4 py-8">

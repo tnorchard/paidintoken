@@ -22,10 +22,6 @@ export function HeroPrice() {
 
   return (
     <section className="relative overflow-hidden border-b border-line">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(34,197,94,0.12),transparent_60%)]"
-      />
       <div className="relative mx-auto max-w-5xl px-4 py-10 md:py-14">
         <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-muted">
           <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-up" />

@@ -24,7 +24,7 @@ export function SiteHeader() {
           <Link href="/portfolio" className="hidden hover:text-accent sm:inline">
             Portfolio
           </Link>
-          <Link href="/faq" className="hidden hover:text-accent lg:inline">
+          <Link href="/#faq" className="hidden hover:text-accent lg:inline">
             FAQ
           </Link>
           <Link href="/og" className="hover:text-accent">

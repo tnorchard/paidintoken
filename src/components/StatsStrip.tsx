@@ -36,7 +36,7 @@ export function StatsStrip({ stats }: { stats: MarketStats }) {
   return (
     <section className="grid grid-cols-1 rounded-lg border border-line bg-card sm:grid-cols-2 lg:grid-cols-4">
       <StatCell
-        label="Total Market Cap"
+        label="Total Crypto Market Cap"
         value={
           stats.totalMarketCap !== null
             ? formatCompactUsd(stats.totalMarketCap)
@@ -47,17 +47,20 @@ export function StatsStrip({ stats }: { stats: MarketStats }) {
             <p
               className={`text-xs font-semibold tabular-nums ${stats.marketCapChange24h >= 0 ? "text-up" : "text-down"}`}
             >
-              {formatPercent(stats.marketCapChange24h)} in 24h
+              {formatPercent(stats.marketCapChange24h)} in 24h · all coins
             </p>
-          ) : undefined
+          ) : (
+            <p className="text-xs text-muted">All coins &amp; tokens</p>
+          )
         }
       />
 
       <StatCell
-        label="24h Volume"
+        label="24h Trading Volume"
         value={
           stats.totalVolume !== null ? formatCompactUsd(stats.totalVolume) : "—"
         }
+        sub={<p className="text-xs text-muted">Across all exchanges</p>}
       />
 
       <StatCell
@@ -67,6 +70,7 @@ export function StatsStrip({ stats }: { stats: MarketStats }) {
             ? `${stats.btcDominance.toFixed(1)}%`
             : "—"
         }
+        sub={<p className="text-xs text-muted">Share of total crypto cap</p>}
       />
 
       <div className="p-4">

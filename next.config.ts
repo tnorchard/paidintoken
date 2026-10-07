@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "coin-images.coingecko.com" },
     ],
   },
+  async redirects() {
+    return [{ source: "/faq", destination: "/#faq", permanent: false }];
+  },
 };
 
 export default nextConfig;

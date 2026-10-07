@@ -83,7 +83,7 @@ export function PaidinTokenHome() {
         </div>
       </main>
 
-      <Footer showOgLink={false} />
+      <Footer showOgLink={false} compact />
     </>
   );
 }

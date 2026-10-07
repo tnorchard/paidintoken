@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCoin, getCoinChart } from "@/lib/coins";
@@ -6,6 +7,7 @@ import { changeClass, formatCompactUsd, formatPercent, formatUsd } from "@/lib/f
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { PriceChart } from "@/components/PriceChart";
 import { StarButton } from "@/components/StarButton";
+import { type FaqItem, FaqBlock } from "@/components/FaqBlock";
 
 export const revalidate = 3600;
 
@@ -84,6 +86,39 @@ export default async function CoinPage({ params }: CoinPageProps) {
     ? coin.maxSupply.toLocaleString("en-US", { maximumFractionDigits: 0 })
     : "Uncapped";
 
+  const symbol = coin.symbol.toUpperCase();
+  const descriptionSnippet =
+    coin.description.length > 300
+      ? `${coin.description.slice(0, 300).trimEnd()}…`
+      : coin.description;
+
+  const faqItems: FaqItem[] = [
+    {
+      q: `What is ${coin.name}?`,
+      a:
+        descriptionSnippet ||
+        `${coin.name} (${symbol}) is a cryptocurrency ranked #${coin.marketCapRank ?? "—"} by market capitalization.`,
+    },
+    {
+      q: `How is the ${coin.name} price calculated?`,
+      a: `PaidinToken shows the ${symbol} price CoinGecko computes as a volume-weighted average across hundreds of exchanges. It refreshes on this page every 60 seconds.`,
+    },
+    {
+      q: `What is ${symbol}'s circulating supply?`,
+      a: coin.circulatingSupply !== null
+        ? `${supplyLabel} ${symbol} are in circulation${coin.maxSupply !== null ? `, out of a maximum supply of ${maxLabel}` : ", with no hard cap on total supply"}. Circulating supply multiplied by price equals the market cap shown above.`
+        : `Circulating supply data for ${symbol} is currently unavailable from the data provider. Market cap is shown instead.`,
+    },
+    {
+      q: `Where can I buy ${coin.name}?`,
+      a: `${coin.name} is listed on most major exchanges and decentralized swaps; availability depends on your region. Compare fees and liquidity before trading.`,
+    },
+    {
+      q: `Should I invest in ${coin.name}?`,
+      a: `PaidinToken does not provide financial advice. This page presents market data only — always do your own research and consider your own circumstances before buying any cryptocurrency.`,
+    },
+  ];
+
   return (
     <>
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
@@ -96,13 +131,15 @@ export default async function CoinPage({ params }: CoinPageProps) {
 
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element -- Coin image URLs come from CoinGecko's CDN. */}
-            <img
-              src={coin.image}
-              alt={`${coin.name} logo`}
-              width={44}
-              height={44}
-            />
+            {coin.image && (
+              <Image
+                src={coin.image}
+                alt={`${coin.name} logo`}
+                width={44}
+                height={44}
+                className="h-11 w-11 shrink-0"
+              />
+            )}
             <div>
               <h1 className="text-2xl font-bold md:text-3xl">
                 {coin.name}{" "}
@@ -177,6 +214,8 @@ export default async function CoinPage({ params }: CoinPageProps) {
             </p>
           </section>
         )}
+
+        <FaqBlock items={faqItems} title={`FAQ · ${coin.name}`} />
 
         <section className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-card p-4 text-sm">
           <p className="text-muted">

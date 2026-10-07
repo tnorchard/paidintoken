@@ -32,7 +32,7 @@ interface GeckoCoinDetail {
   id: string;
   name: string;
   symbol: string;
-  image: string;
+  image: string | { thumb?: string; small?: string; large?: string };
   genesis_date: string | null;
   market_cap_rank: number | null;
   description: { en?: string };
@@ -79,6 +79,10 @@ export async function getCoin(id: string): Promise<CoinResult> {
     const data: GeckoCoinDetail = await response.json();
     const m = data.market_data;
     const homepage = data.links.homepage?.find((url) => url && url.length > 0);
+    const image =
+      typeof data.image === "string"
+        ? data.image
+        : (data.image.large ?? data.image.small ?? data.image.thumb ?? "");
 
     return {
       status: "ok",
@@ -86,7 +90,7 @@ export async function getCoin(id: string): Promise<CoinResult> {
         id: data.id,
         name: data.name,
         symbol: data.symbol,
-        image: data.image,
+        image,
         description: stripHtml(data.description.en ?? ""),
         genesisDate: data.genesis_date,
         homepage: homepage ?? null,

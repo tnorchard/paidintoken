@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { FaqBlock } from "@/components/FaqBlock";
 import { MarketProvider } from "@/components/MarketProvider";
 import { PortfolioCalculator } from "@/components/PortfolioCalculator";
 
@@ -45,6 +46,27 @@ export default function PortfolioPage() {
           for charts and supply data.
         </p>
       </section>
+      <FaqBlock
+        title="FAQ · Portfolio Calculator"
+        items={[
+          {
+            q: "Is my portfolio stored on your servers?",
+            a: "No. Holdings are saved in this browser's local storage only. Nothing is uploaded, and clearing your site data erases the portfolio.",
+          },
+          {
+            q: "What should I enter as cost basis?",
+            a: "The total amount in US dollars you actually paid for the position — not the per-coin price. The calculator works out profit and loss from that total against today's live value.",
+          },
+          {
+            q: "How often do the values update?",
+            a: "Live prices refresh every 60 seconds while the page is open, so totals and unrealized P/L stay current without reloading.",
+          },
+          {
+            q: "Can I sync this across devices?",
+            a: "Not yet — the portfolio is intentionally local to each browser. Treat it as a quick private tracker rather than a multi-device account.",
+          },
+        ]}
+      />
     </main>
   );
 }
