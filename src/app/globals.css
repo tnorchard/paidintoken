@@ -1,11 +1,97 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-up: var(--up);
+  --color-down: var(--down);
+}
+
+:root {
+  color-scheme: light;
+  --surface: #ffffff;
+  --card: #f7f7f7;
+  --ink: #0a0a0a;
+  --muted: #666666;
+  --line: #e2e2e2;
+  --accent: #16a34a;
+  --up: #16a34a;
+  --down: #dc2626;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --surface: #0b0e12;
+  --card: #141920;
+  --ink: #e8eaed;
+  --muted: #9aa4b2;
+  --line: #232a33;
+  --accent: #22c55e;
+  --up: #22c55e;
+  --down: #ef4444;
+}
+
+html,
 body {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  background-color: var(--surface);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
   font-family: var(--font-roboto-mono), "Roboto Mono", monospace;
 }
 
+/* Force the original light palette on the OG tracker page. */
+.og-scope {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  color-scheme: light;
+  --surface: #ffffff;
+  --card: #eeeeee;
+  --ink: #000000;
+  --muted: #555555;
+  --line: #dddddd;
+  --accent: #16a34a;
+  --up: #16a34a;
+  --down: #dc2626;
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+/* Price marquee */
+@keyframes pit-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.pit-marquee-track {
+  animation: pit-marquee 50s linear infinite;
+  will-change: transform;
+}
+
+.pit-marquee:hover .pit-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pit-marquee-track {
+    animation: none;
+  }
+}
+
+/* Original OG table styles */
 .pit-table td,
 .pit-table th {
   border: 1px solid #dddddd;

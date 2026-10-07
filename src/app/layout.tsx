@@ -9,15 +9,29 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PaidinToken",
+  title: {
+    default: "PaidinToken — Live Crypto Prices & News",
+    template: "%s | PaidinToken",
+  },
   description:
-    "Transparent stats on celebrity and athlete cryptocurrency payments.",
+    "Live cryptocurrency prices, 24hr market data, and the latest crypto news — plus transparent stats on celebrity and athlete Bitcoin payments.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${robotoMono.variable} h-full`}>
-      <body className="flex min-h-full flex-col bg-white text-black antialiased">
+    <html
+      lang="en"
+      className={`${robotoMono.variable} h-full`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("pit-theme");document.documentElement.dataset.theme=t||"dark";}catch(e){document.documentElement.dataset.theme="dark";}`,
+          }}
+        />
+      </head>
+      <body className="flex min-h-full flex-col bg-surface text-ink antialiased">
         {children}
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import type { BitcoinPrice } from "@/types";
 import { athletes } from "@/data/athletes";
 import { buildAthleteRows } from "@/lib/calculations";
@@ -28,8 +29,11 @@ export function PaidinTokenHome() {
   }, []);
 
   useEffect(() => {
-    loadPrices();
-    const interval = setInterval(loadPrices, 60000);
+    const refresh = () => {
+      void loadPrices();
+    };
+    refresh();
+    const interval = setInterval(refresh, 60000);
     return () => clearInterval(interval);
   }, [loadPrices]);
 
@@ -40,7 +44,9 @@ export function PaidinTokenHome() {
     <>
       <header>
         <div className="container mx-auto mr-5 mt-4">
-          <p className="title text-right text-3xl font-bold">PaidinToken</p>
+          <p className="title text-right text-3xl font-bold">
+            <Link href="/">PaidinToken</Link>
+          </p>
         </div>
       </header>
 
@@ -77,7 +83,7 @@ export function PaidinTokenHome() {
         </div>
       </main>
 
-      <Footer />
+      <Footer showOgLink={false} />
     </>
   );
 }

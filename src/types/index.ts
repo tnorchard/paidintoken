@@ -21,3 +21,46 @@ export interface AthleteRow extends Athlete {
   priceAtPaymentFormatted: string;
   priceDifferenceFormatted: string;
 }
+
+export interface Coin {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  currentPrice: number;
+  marketCap: number;
+  priceChange24hPercent: number | null;
+  high24h: number | null;
+  low24h: number | null;
+}
+
+export interface Mover {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  currentPrice: number;
+  priceChange24hPercent: number | null;
+}
+
+export interface MarketData {
+  coins: Coin[];
+  gainers: Mover[];
+  losers: Mover[];
+}
+
+export interface MarketStats {
+  totalMarketCap: number | null;
+  marketCapChange24h: number | null;
+  totalVolume: number | null;
+  btcDominance: number | null;
+  fearGreed: { value: number; label: string } | null;
+}
+
+export interface NewsItem {
+  title: string;
+  link: string;
+  source: string;
+  publishedAt: number;
+  image?: string;
+}
