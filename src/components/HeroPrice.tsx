@@ -1,6 +1,7 @@
 "use client";
 
 import { useMarket } from "./MarketProvider";
+import { CountUp } from "./CountUp";
 import { formatUsd } from "@/lib/format";
 
 function formatPrice(value: number | undefined): string {
@@ -34,7 +35,10 @@ export function HeroPrice() {
 
         <div className="mt-2 flex flex-wrap items-end gap-x-8 gap-y-4">
           <h1 className="text-5xl font-bold tabular-nums md:text-7xl">
-            ${formatPrice(last)}
+            <CountUp
+              value={last ?? null}
+              format={(value) => `$${formatPrice(value)}`}
+            />
           </h1>
 
           <div className="flex gap-8 pb-1">

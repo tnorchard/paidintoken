@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMarket } from "./MarketProvider";
@@ -63,29 +64,73 @@ function MoversPanel({
         {title}
       </h3>
       <ul>
-        {[0, 1, 2, 3, 4].map((index) => (
-          <MoverRow key={items?.[index]?.id ?? index} mover={items?.[index]} />
-        ))}
+        {items
+          ? items.map((mover) => <MoverRow key={mover.id} mover={mover} />)
+          : [0, 1, 2, 3, 4].map((index) => (
+              <MoverRow key={index} mover={undefined} />
+            ))}
       </ul>
     </div>
   );
 }
 
+const COLLAPSED_SIZE = 5;
+const EXPANDED_SIZE = 10;
+
 export function MoversBoard() {
   const { markets } = useMarket();
+  const [expanded, setExpanded] = useState(false);
+
+  const ranked = useMemo(() => {
+    const universe = markets?.universe ?? [];
+    return universe
+      .filter(
+        (coin) =>
+          coin.priceChange24hPercent !== null &&
+          Number.isFinite(coin.priceChange24hPercent),
+      )
+      .sort(
+        (a, b) =>
+          (b.priceChange24hPercent ?? 0) - (a.priceChange24hPercent ?? 0),
+      );
+  }, [markets]);
+
+  const size = expanded ? EXPANDED_SIZE : COLLAPSED_SIZE;
+
+  const gainers = expanded
+    ? ranked.slice(0, size)
+    : (markets?.gainers ?? undefined);
+  const losers = expanded
+    ? ranked.slice(-size).reverse()
+    : (markets?.losers ?? undefined);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <MoversPanel
-        title="Top Gainers · 24h"
-        items={markets?.gainers}
-        accentClass="text-up"
-      />
-      <MoversPanel
-        title="Top Losers · 24h"
-        items={markets?.losers}
-        accentClass="text-down"
-      />
+    <div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <MoversPanel
+          title={`Top Gainers · 24h${expanded ? ` · Top ${EXPANDED_SIZE}` : ""}`}
+          items={gainers}
+          accentClass="text-up"
+        />
+        <MoversPanel
+          title={`Top Losers · 24h${expanded ? ` · Top ${EXPANDED_SIZE}` : ""}`}
+          items={losers}
+          accentClass="text-down"
+        />
+      </div>
+
+      {markets && (
+        <div className="mt-3 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setExpanded((value) => !value)}
+            aria-expanded={expanded}
+            className="rounded border border-line bg-card px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-muted transition hover:border-accent hover:text-ink"
+          >
+            {expanded ? "Show less movers ▴" : `Show top ${EXPANDED_SIZE} movers ▾`}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

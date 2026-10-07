@@ -31,7 +31,7 @@ export async function GET() {
 
     const data: GeckoMarket[] = await response.json();
 
-    const coins: Coin[] = data.slice(0, BOARD_SIZE).map((coin) => ({
+    const mapCoin = (coin: GeckoMarket): Coin => ({
       id: coin.id,
       symbol: coin.symbol,
       name: coin.name,
@@ -41,7 +41,10 @@ export async function GET() {
       priceChange24hPercent: coin.price_change_percentage_24h,
       high24h: coin.high_24h,
       low24h: coin.low_24h,
-    }));
+    });
+
+    const coins: Coin[] = data.slice(0, BOARD_SIZE).map(mapCoin);
+    const universe: Coin[] = data.map(mapCoin);
 
     const ranked = data
       .filter(
@@ -67,15 +70,6 @@ export async function GET() {
 
     const gainers = byChangeDesc.slice(0, MOVERS_SIZE);
     const losers = byChangeDesc.slice(-MOVERS_SIZE).reverse();
-
-    const universe: Mover[] = data.map((coin) => ({
-      id: coin.id,
-      symbol: coin.symbol,
-      name: coin.name,
-      image: coin.image,
-      currentPrice: coin.current_price,
-      priceChange24hPercent: coin.price_change_percentage_24h,
-    }));
 
     return NextResponse.json({ coins, gainers, losers, universe });
   } catch {

@@ -91,8 +91,60 @@ export default async function CoinPage({ params }: CoinPageProps) {
     coin.description.length > 300
       ? `${coin.description.slice(0, 300).trimEnd()}…`
       : coin.description;
+  const descriptionExtra =
+    coin.description.length > 650
+      ? `${coin.description.slice(300, 650).trimEnd()}…`
+      : null;
+
+  const dailyPrices = chart.map((point) => point.price);
+  const priceYesterday =
+    dailyPrices.length >= 2 ? dailyPrices[dailyPrices.length - 2] : null;
+  const price30dAgo =
+    dailyPrices.length >= 31 ? dailyPrices[dailyPrices.length - 31] : null;
+  const changeVs30d =
+    price30dAgo && price30dAgo > 0
+      ? ((coin.currentPrice - price30dAgo) / price30dAgo) * 100
+      : null;
+  const athGap =
+    coin.ath && coin.ath > 0
+      ? ((coin.ath - coin.currentPrice) / coin.ath) * 100
+      : null;
+  const atlGap =
+    coin.atl && coin.atl > 0
+      ? ((coin.currentPrice - coin.atl) / coin.atl) * 100
+      : null;
+  const longDate = (value: string | null) =>
+    value
+      ? new Date(value).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })
+      : null;
 
   const faqItems: FaqItem[] = [
+    {
+      q: `What is the price of ${coin.name} today?`,
+      a: `${coin.name} (${symbol}) trades at ${formatUsd(coin.currentPrice)} in US dollars right now. The price refreshes every 60 seconds${
+        coin.high24h !== null && coin.low24h !== null
+          ? `, with a 24-hour range between ${formatUsd(coin.low24h)} and ${formatUsd(coin.high24h)}`
+          : ""
+      }.`,
+    },
+    {
+      q: `Is ${coin.name} up or down today?`,
+      a: `${symbol} is ${coin.change24h !== null && coin.change24h >= 0 ? "up" : "down"} ${
+        coin.change24h !== null ? Math.abs(coin.change24h).toFixed(2) : "?"
+      }% over the last 24 hours${
+        coin.change7d !== null
+          ? `, ${coin.change7d >= 0 ? "up" : "down"} ${Math.abs(coin.change7d).toFixed(2)}% over 7 days`
+          : ""
+      }${
+        coin.change30d !== null
+          ? `, and ${coin.change30d >= 0 ? "up" : "down"} ${Math.abs(coin.change30d).toFixed(2)}% over 30 days`
+          : ""
+      }.`,
+    },
     {
       q: `What is ${coin.name}?`,
       a:
@@ -100,14 +152,78 @@ export default async function CoinPage({ params }: CoinPageProps) {
         `${coin.name} (${symbol}) is a cryptocurrency ranked #${coin.marketCapRank ?? "—"} by market capitalization.`,
     },
     {
-      q: `How is the ${coin.name} price calculated?`,
-      a: `PaidinToken shows the ${symbol} price CoinGecko computes as a volume-weighted average across hundreds of exchanges. It refreshes on this page every 60 seconds.`,
+      q: `What is ${coin.name} used for?`,
+      a:
+        descriptionExtra ||
+        `${coin.name} is a digital asset that trades against dollars and other cryptocurrencies on hundreds of exchanges — its live price, supply, and volume are tracked on this page.`,
     },
     {
-      q: `What is ${symbol}'s circulating supply?`,
-      a: coin.circulatingSupply !== null
-        ? `${supplyLabel} ${symbol} are in circulation${coin.maxSupply !== null ? `, out of a maximum supply of ${maxLabel}` : ", with no hard cap on total supply"}. Circulating supply multiplied by price equals the market cap shown above.`
-        : `Circulating supply data for ${symbol} is currently unavailable from the data provider. Market cap is shown instead.`,
+      q: `What is ${coin.name}'s market rank?`,
+      a:
+        coin.marketCapRank !== null
+          ? `${coin.name} is ranked #${coin.marketCapRank} by market capitalization, with a total value of ${formatCompactUsd(coin.marketCap)}.`
+          : `A current market-cap rank for ${coin.name} is not available from the data provider right now.`,
+    },
+    {
+      q: `What is ${coin.name}'s market cap?`,
+      a: `The market capitalization of ${symbol} is ${formatCompactUsd(coin.marketCap)} — the live price multiplied by a circulating supply of ${supplyLabel} ${symbol}.`,
+    },
+    {
+      q: `What is ${coin.name}'s 24-hour trading volume?`,
+      a: `${formatCompactUsd(coin.totalVolume)} worth of ${symbol} changed hands across all exchanges in the last 24 hours.`,
+    },
+    {
+      q: `How many ${coin.name} coins are there?`,
+      a:
+        coin.circulatingSupply !== null
+          ? `${supplyLabel} ${symbol} are in circulation${
+              coin.totalSupply !== null
+                ? `, with a total supply of ${coin.totalSupply.toLocaleString("en-US", { maximumFractionDigits: 0 })}`
+                : ""
+            }${
+              coin.maxSupply !== null
+                ? ` and a maximum supply of ${maxLabel}`
+                : ", and no hard cap on issuance"
+            }.`
+          : `Circulating supply data for ${symbol} is currently unavailable; market cap is shown instead.`,
+    },
+    {
+      q: `What was ${coin.name}'s all-time high?`,
+      a:
+        coin.ath !== null
+          ? `${symbol} reached its all-time high of ${formatUsd(coin.ath)}${coin.athDate ? ` on ${longDate(coin.athDate)}` : ""}. That record sits ${Math.abs(athGap ?? 0).toFixed(1)}% ${athGap !== null && athGap >= 0 ? "above" : "below"} today's price.`
+          : `All-time high data for ${symbol} is not available right now.`,
+    },
+    {
+      q: `What was ${coin.name}'s all-time low?`,
+      a:
+        coin.atl !== null
+          ? `${symbol} has traded as low as ${formatUsd(coin.atl)}. Today's price is ${Math.abs(atlGap ?? 0).toFixed(1)}% above that floor.`
+          : `All-time low data for ${symbol} is not available right now.`,
+    },
+    {
+      q: `What was ${coin.name}'s price 30 days ago?`,
+      a:
+        price30dAgo !== null && changeVs30d !== null
+          ? `Thirty days ago ${symbol} traded around ${formatUsd(price30dAgo)} — a ${changeVs30d >= 0 ? "gain" : "drop"} of ${Math.abs(changeVs30d).toFixed(1)}% since then.`
+          : `Historical price data for ${symbol} is still loading — the chart above shows the last year of daily closes.`,
+    },
+    {
+      q: `What was ${coin.name}'s price yesterday?`,
+      a:
+        priceYesterday !== null
+          ? `Yesterday's daily close for ${symbol} was about ${formatUsd(priceYesterday)}, versus ${formatUsd(coin.currentPrice)} today.`
+          : `Yesterday's close for ${symbol} is not available right now.`,
+    },
+    {
+      q: `When was ${coin.name} created?`,
+      a: coin.genesisDate
+        ? `${coin.name} launched on ${coin.genesisDate}.`
+        : `The data provider does not list a genesis date for ${symbol}.`,
+    },
+    {
+      q: `How is the ${coin.name} price calculated?`,
+      a: `PaidinToken shows the ${symbol} price CoinGecko computes as a volume-weighted average across hundreds of exchanges. It refreshes on this page every 60 seconds.`,
     },
     {
       q: `Where can I buy ${coin.name}?`,
@@ -116,6 +232,10 @@ export default async function CoinPage({ params }: CoinPageProps) {
     {
       q: `Should I invest in ${coin.name}?`,
       a: `PaidinToken does not provide financial advice. This page presents market data only — always do your own research and consider your own circumstances before buying any cryptocurrency.`,
+    },
+    {
+      q: `How high can ${coin.name} go?`,
+      a: `Nobody can predict prices. For context, ${symbol}'s all-time high is ${coin.ath !== null ? formatUsd(coin.ath) : "unknown"} while it trades at ${formatUsd(coin.currentPrice)} today — treat any price prediction with skepticism.`,
     },
   ];
 
