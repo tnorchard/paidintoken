@@ -10,8 +10,13 @@ import { NewsCarousel } from "@/components/NewsCarousel";
 import { GlossaryGrid } from "@/components/GlossaryGrid";
 import { OgTeaser } from "@/components/OgTeaser";
 import { Footer } from "@/components/Footer";
+import { WatchlistStrip } from "@/components/WatchlistStrip";
+import { HalvingCountdown } from "@/components/HalvingCountdown";
+import { FaqTeaser } from "@/components/FaqTeaser";
+import { PriceChart } from "@/components/PriceChart";
 import { getNews } from "@/lib/news";
 import { getMarketStats } from "@/lib/stats";
+import { getCoinChart } from "@/lib/coins";
 
 export const revalidate = 300;
 
@@ -19,6 +24,7 @@ export const metadata: Metadata = {
   title: "PaidinToken — Live Crypto Prices & News",
   description:
     "Live cryptocurrency prices, market stats, fear & greed index, gainers and losers, and the latest crypto news from CoinDesk, Cointelegraph, Decrypt, and The Block.",
+  alternates: { canonical: "/" },
 };
 
 function SectionHeading({
@@ -44,7 +50,11 @@ function SectionHeading({
 }
 
 export default async function Home() {
-  const [news, stats] = await Promise.all([getNews(), getMarketStats()]);
+  const [news, stats, btcChart] = await Promise.all([
+    getNews(),
+    getMarketStats(),
+    getCoinChart("bitcoin"),
+  ]);
 
   return (
     <>
@@ -58,12 +68,24 @@ export default async function Home() {
             <StatsStrip stats={stats} />
           </section>
 
+          <section className="mx-auto max-w-5xl px-4">
+            <SectionHeading
+              title="Bitcoin Price"
+              note="1-year history · daily closes"
+            />
+            <PriceChart data={btcChart} />
+          </section>
+
           <section id="markets" className="mx-auto max-w-5xl px-4">
             <SectionHeading
               title="Market Prices"
               note="LIVE · updates every 60s"
             />
+            <WatchlistStrip />
             <MarketBoard />
+            <p className="mt-3 text-xs text-muted">
+              Tap ☆ to build a watchlist · open any coin for charts and supply
+            </p>
           </section>
 
           <section className="mx-auto max-w-5xl px-4">
@@ -88,6 +110,22 @@ export default async function Home() {
               note="Tap a card to learn the lingo"
             />
             <GlossaryGrid />
+          </section>
+
+          <section className="mx-auto max-w-5xl px-4">
+            <SectionHeading
+              title="Bitcoin Halving"
+              note="Supply cuts every ~4 years"
+            />
+            <HalvingCountdown />
+          </section>
+
+          <section id="faq" className="mx-auto max-w-5xl px-4">
+            <SectionHeading
+              title="FAQ"
+              note="How this site and the market work"
+            />
+            <FaqTeaser />
           </section>
 
           <section className="mx-auto max-w-5xl px-4">

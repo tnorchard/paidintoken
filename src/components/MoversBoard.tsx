@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useMarket } from "./MarketProvider";
 import type { Mover } from "@/types";
 import { changeClass, formatPercent, formatUsd } from "@/lib/format";
@@ -16,26 +17,31 @@ function MoverRow({ mover }: { mover: Mover | undefined }) {
   }
 
   return (
-    <li className="flex items-center justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
-      <span className="flex min-w-0 items-center gap-2">
-        <Image
-          src={mover.image}
-          alt=""
-          width={18}
-          height={18}
-          className="shrink-0"
-        />
-        <span className="truncate text-sm font-medium">{mover.name}</span>
-        <span className="text-xs uppercase text-muted">{mover.symbol}</span>
-      </span>
-      <span className="flex shrink-0 items-baseline gap-3 text-sm tabular-nums">
-        <span>{formatUsd(mover.currentPrice)}</span>
-        <span
-          className={`w-20 text-right font-semibold ${changeClass(mover.priceChange24hPercent)}`}
-        >
-          {formatPercent(mover.priceChange24hPercent)}
+    <li className="border-b border-line last:border-b-0">
+      <Link
+        href={`/coins/${mover.id}`}
+        className="flex items-center justify-between gap-3 py-2.5 hover:text-accent"
+      >
+        <span className="flex min-w-0 items-center gap-2">
+          <Image
+            src={mover.image}
+            alt=""
+            width={18}
+            height={18}
+            className="shrink-0"
+          />
+          <span className="truncate text-sm font-medium">{mover.name}</span>
+          <span className="text-xs uppercase text-muted">{mover.symbol}</span>
         </span>
-      </span>
+        <span className="flex shrink-0 items-baseline gap-3 text-sm tabular-nums">
+          <span>{formatUsd(mover.currentPrice)}</span>
+          <span
+            className={`w-20 text-right font-semibold ${changeClass(mover.priceChange24hPercent)}`}
+          >
+            {formatPercent(mover.priceChange24hPercent)}
+          </span>
+        </span>
+      </Link>
     </li>
   );
 }

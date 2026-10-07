@@ -161,7 +161,7 @@ async function fetchFeed(feed: (typeof FEEDS)[number]): Promise<NewsItem[]> {
     .filter((item): item is NewsItem => item !== null);
 }
 
-export async function getNews(): Promise<NewsItem[]> {
+export async function getNews(limit = MAX_TOTAL_ITEMS): Promise<NewsItem[]> {
   const results = await Promise.allSettled(FEEDS.map(fetchFeed));
 
   const seen = new Set<string>();
@@ -178,5 +178,5 @@ export async function getNews(): Promise<NewsItem[]> {
 
   items.sort((a, b) => b.publishedAt - a.publishedAt);
 
-  return items.slice(0, MAX_TOTAL_ITEMS);
+  return items.slice(0, limit);
 }

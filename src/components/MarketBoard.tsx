@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useMarket } from "./MarketProvider";
+import { StarButton } from "./StarButton";
 import { changeClass, formatCompactUsd, formatPercent, formatUsd } from "@/lib/format";
 
 function PlaceholderRow({ rank }: { rank: number }) {
@@ -14,7 +16,8 @@ function PlaceholderRow({ rank }: { rank: number }) {
       <td className="hidden py-2.5 pr-4 text-right text-muted md:table-cell">
         —
       </td>
-      <td className="hidden py-2.5 text-right text-muted md:table-cell">—</td>
+      <td className="hidden py-2.5 pr-4 text-right text-muted md:table-cell">—</td>
+      <td className="py-2.5 text-right text-muted">☆</td>
     </tr>
   );
 }
@@ -51,9 +54,12 @@ export function MarketBoard() {
             </th>
             <th
               scope="col"
-              className="hidden py-2 text-right font-medium md:table-cell"
+              className="hidden py-2 pr-4 text-right font-medium md:table-cell"
             >
               24h High / Low
+            </th>
+            <th scope="col" className="py-2 text-right font-medium">
+              <span className="sr-only">Watchlist</span>
             </th>
           </tr>
         </thead>
@@ -77,7 +83,12 @@ export function MarketBoard() {
                         height={20}
                         className="shrink-0"
                       />
-                      <span className="font-medium">{coin.name}</span>
+                      <Link
+                        href={`/coins/${coin.id}`}
+                        className="font-medium hover:text-accent"
+                      >
+                        {coin.name}
+                      </Link>
                       <span className="text-xs uppercase text-muted">
                         {coin.symbol}
                       </span>
@@ -94,10 +105,13 @@ export function MarketBoard() {
                   <td className="hidden py-2.5 pr-4 text-right tabular-nums md:table-cell">
                     {formatCompactUsd(coin.marketCap)}
                   </td>
-                  <td className="hidden py-2.5 text-right text-muted tabular-nums md:table-cell">
+                  <td className="hidden py-2.5 pr-4 text-right text-muted tabular-nums md:table-cell">
                     {coin.high24h !== null ? formatUsd(coin.high24h) : "—"}
                     {" / "}
                     {coin.low24h !== null ? formatUsd(coin.low24h) : "—"}
+                  </td>
+                  <td className="py-2.5 text-right">
+                    <StarButton coinId={coin.id} />
                   </td>
                 </tr>
               ))}

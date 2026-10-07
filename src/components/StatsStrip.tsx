@@ -90,6 +90,27 @@ export function StatsStrip({ stats }: { stats: MarketStats }) {
                 aria-hidden="true"
               />
             </div>
+            {stats.fearGreedHistory.length > 1 && (
+              <div className="mt-2">
+                <div
+                  className="flex h-6 items-end gap-px"
+                  role="img"
+                  aria-label={`Fear and greed over the last ${stats.fearGreedHistory.length} days`}
+                >
+                  {stats.fearGreedHistory.map((value, index) => (
+                    <span
+                      key={index}
+                      title={`Day ${index + 1}: ${value}`}
+                      className={`w-full min-w-[2px] rounded-t-sm ${fearGreedColor(value)}`}
+                      style={{ height: `${Math.max(8, value)}%` }}
+                    />
+                  ))}
+                </div>
+                <p className="mt-1 text-[10px] text-muted">
+                  Last {stats.fearGreedHistory.length} days
+                </p>
+              </div>
+            )}
           </>
         ) : (
           <p className="mt-1 text-xl font-bold">—</p>

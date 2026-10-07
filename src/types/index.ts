@@ -47,6 +47,7 @@ export interface MarketData {
   coins: Coin[];
   gainers: Mover[];
   losers: Mover[];
+  universe: Mover[];
 }
 
 export interface MarketStats {
@@ -55,6 +56,7 @@ export interface MarketStats {
   totalVolume: number | null;
   btcDominance: number | null;
   fearGreed: { value: number; label: string } | null;
+  fearGreedHistory: number[];
 }
 
 export interface NewsItem {

@@ -68,8 +68,20 @@ export async function GET() {
     const gainers = byChangeDesc.slice(0, MOVERS_SIZE);
     const losers = byChangeDesc.slice(-MOVERS_SIZE).reverse();
 
-    return NextResponse.json({ coins, gainers, losers });
+    const universe: Mover[] = data.map((coin) => ({
+      id: coin.id,
+      symbol: coin.symbol,
+      name: coin.name,
+      image: coin.image,
+      currentPrice: coin.current_price,
+      priceChange24hPercent: coin.price_change_percentage_24h,
+    }));
+
+    return NextResponse.json({ coins, gainers, losers, universe });
   } catch {
-    return NextResponse.json({ coins: [], gainers: [], losers: [] }, { status: 503 });
+    return NextResponse.json(
+      { coins: [], gainers: [], losers: [], universe: [] },
+      { status: 503 },
+    );
   }
 }

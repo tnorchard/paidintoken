@@ -1,7 +1,7 @@
 import type { MarketStats } from "@/types";
 
 const COINGECKO_GLOBAL = "https://api.coingecko.com/api/v3/global";
-const FEAR_GREED = "https://api.alternative.me/fng/?limit=1";
+const FEAR_GREED = "https://api.alternative.me/fng/?limit=30";
 
 interface GeckoGlobal {
   data: {
@@ -36,6 +36,7 @@ export async function getMarketStats(): Promise<MarketStats> {
   let totalVolume: number | null = null;
   let btcDominance: number | null = null;
   let fearGreed: MarketStats["fearGreed"] = null;
+  let fearGreedHistory: number[] = [];
 
   if (globalResult.status === "fulfilled" && globalResult.value.ok) {
     const json: GeckoGlobal = await globalResult.value.json();
@@ -54,6 +55,10 @@ export async function getMarketStats(): Promise<MarketStats> {
         label: entry.value_classification,
       };
     }
+    fearGreedHistory = [...(json.data ?? [])]
+      .map((item) => Number(item.value))
+      .filter((value) => Number.isFinite(value))
+      .reverse();
   }
 
   return {
@@ -62,5 +67,6 @@ export async function getMarketStats(): Promise<MarketStats> {
     totalVolume,
     btcDominance,
     fearGreed,
+    fearGreedHistory,
   };
 }
