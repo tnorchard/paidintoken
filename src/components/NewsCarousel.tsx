@@ -41,57 +41,77 @@ function CardImage({ item }: { item: NewsItem }) {
   );
 }
 
-export function NewsCarousel({ items }: { items: NewsItem[] }) {
+export function NewsCarousel({
+  items,
+  label,
+}: {
+  items: NewsItem[];
+  label?: string;
+}) {
   if (items.length === 0) {
     return (
-      <p className="py-6 text-sm text-muted">
-        No news right now — check back soon.
-      </p>
+      <div>
+        {label && (
+          <h3 className="mb-2.5 text-sm font-bold uppercase tracking-wider text-muted">
+            {label}
+          </h3>
+        )}
+        <p className="py-6 text-sm text-muted">
+          No news right now — check back soon.
+        </p>
+      </div>
     );
   }
 
   return (
-    <div className="relative">
-      <div className="pit-hscroll -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-3">
-        {items.map((item) => (
-          <a
-            key={item.link}
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group w-[290px] shrink-0 snap-start overflow-hidden rounded-lg border border-line bg-card transition duration-200 hover:-translate-y-1 hover:border-accent sm:w-[320px]"
-          >
-            <div className="overflow-hidden">
-              <CardImage item={item} />
-            </div>
-            <div className="p-3.5">
-              <div className="flex items-center justify-between gap-2">
-                <span className="border border-ink px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider">
-                  {item.source}
-                </span>
-                <time
-                  dateTime={
-                    item.publishedAt
-                      ? new Date(item.publishedAt).toISOString()
-                      : undefined
-                  }
-                  suppressHydrationWarning
-                  className="text-[11px] text-muted"
-                >
-                  {timeAgo(item.publishedAt)}
-                </time>
+    <div>
+      {label && (
+        <h3 className="mb-2.5 text-sm font-bold uppercase tracking-wider text-muted">
+          {label}
+        </h3>
+      )}
+      <div className="relative">
+        <div className="pit-hscroll -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-3">
+          {items.map((item) => (
+            <a
+              key={item.link}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group w-[290px] shrink-0 snap-start overflow-hidden rounded-lg border border-line bg-card transition duration-200 hover:-translate-y-1 hover:border-accent sm:w-[320px]"
+            >
+              <div className="overflow-hidden">
+                <CardImage item={item} />
               </div>
-              <h3 className="mt-2 line-clamp-3 text-sm font-medium leading-snug group-hover:underline">
-                {item.title}
-              </h3>
-            </div>
-          </a>
-        ))}
+              <div className="p-3.5">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="border border-ink px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider">
+                    {item.source}
+                  </span>
+                  <time
+                    dateTime={
+                      item.publishedAt
+                        ? new Date(item.publishedAt).toISOString()
+                        : undefined
+                    }
+                    suppressHydrationWarning
+                    className="text-[11px] text-muted"
+                  >
+                    {timeAgo(item.publishedAt)}
+                  </time>
+                </div>
+                <h3 className="mt-2 line-clamp-3 text-sm font-medium leading-snug group-hover:underline">
+                  {item.title}
+                </h3>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-surface to-transparent"
+        />
       </div>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-surface to-transparent"
-      />
     </div>
   );
 }

@@ -7,7 +7,7 @@ const teasers: FaqItem[] = [
   },
   {
     q: "Where does the news come from?",
-    a: "Official RSS feeds of CoinDesk, Cointelegraph, Decrypt, and The Block — new items show up within five minutes and always link back to the original article.",
+    a: "Official RSS feeds of CoinDesk, Cointelegraph, Decrypt, and The Block for crypto, plus CNBC, MarketWatch, and WSJ Markets for finance — new items show up within five minutes and always link back to the original article.",
   },
   {
     q: "Is my watchlist or portfolio stored on a server?",

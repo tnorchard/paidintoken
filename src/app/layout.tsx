@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | PaidinToken",
   },
   description:
-    "Live cryptocurrency prices, market stats, fear & greed index, gainers and losers, and the latest crypto news from CoinDesk, Cointelegraph, Decrypt, and The Block.",
+    "Live cryptocurrency prices, market stats, fear & greed index, gainers and losers, plus crypto and finance news from CoinDesk, Cointelegraph, CNBC, and MarketWatch.",
   openGraph: {
     siteName: "PaidinToken",
     type: "website",
@@ -33,7 +33,7 @@ const websiteJsonLd = {
   name: "PaidinToken",
   url: "https://www.paidintoken.com",
   description:
-    "Live cryptocurrency prices, market data, and crypto news — plus the original celebrity Bitcoin payment tracker.",
+    "Live cryptocurrency prices, market data, crypto and finance news — plus the original celebrity Bitcoin payment tracker.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

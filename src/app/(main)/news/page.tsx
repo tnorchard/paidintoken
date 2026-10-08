@@ -7,9 +7,9 @@ import { getNews } from "@/lib/news";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Crypto News — Latest Headlines from CoinDesk, Cointelegraph & More",
+  title: "Crypto & Finance News — CoinDesk, Cointelegraph, CNBC & More",
   description:
-    "The latest cryptocurrency news, updated every five minutes from CoinDesk, Cointelegraph, Decrypt, and The Block — prices, regulation, adoption, and market moves in one feed.",
+    "The latest cryptocurrency and finance news, updated every five minutes from CoinDesk, Cointelegraph, Decrypt, The Block, CNBC, and MarketWatch — prices, regulation, markets, and business moves in one feed.",
   alternates: { canonical: "/news" },
 };
 
@@ -25,16 +25,18 @@ function formatDateTime(publishedAt: number): string {
 }
 
 export default async function NewsPage() {
-  const items = await getNews(30);
+  const bundle = await getNews(15);
+  const items = [...bundle.crypto, ...bundle.finance].slice(0, 30);
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
       <Breadcrumbs items={[{ label: "News" }]} />
 
-      <h1 className="text-3xl font-bold">Latest Crypto News</h1>
+      <h1 className="text-3xl font-bold">Latest Crypto &amp; Finance News</h1>
       <p className="mt-2 text-sm text-muted">
-        Updated every five minutes from CoinDesk, Cointelegraph, Decrypt, and
-        The Block. Each headline opens the original article.
+        Updated every five minutes from CoinDesk, Cointelegraph, Decrypt, The
+        Block, CNBC, and MarketWatch — crypto headlines first, then finance.
+        Each headline opens the original article.
       </p>
 
       <ol className="mt-6 border-t border-line">
@@ -83,11 +85,11 @@ export default async function NewsPage() {
         items={[
           {
             q: "Where do these stories come from?",
-            a: "Official RSS feeds from CoinDesk, Cointelegraph, Decrypt, and The Block. PaidinToken never rewrites or republishes articles — every headline opens the original story on the publisher's site.",
+            a: "Official RSS feeds from CoinDesk, Cointelegraph, Decrypt, and The Block for crypto, plus CNBC, MarketWatch, and WSJ Markets for finance. PaidinToken never rewrites or republishes articles — every headline opens the original story on the publisher's site.",
           },
           {
             q: "How often does this feed update?",
-            a: "Every five minutes. New articles appear here within minutes of publication, deduplicated across sources and sorted newest first.",
+            a: "Every five minutes. New articles appear here within minutes of publication, deduplicated across sources, with crypto headlines first and finance right after.",
           },
           {
             q: "Why are only the last 30 stories shown?",

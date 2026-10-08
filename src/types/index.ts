@@ -66,6 +66,7 @@ export interface NewsItem {
   title: string;
   link: string;
   source: string;
+  category: "crypto" | "finance";
   publishedAt: number;
   image?: string;
 }

@@ -21,7 +21,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "PaidinToken — Live Crypto Prices & News",
   description:
-    "Live cryptocurrency prices, market stats, fear & greed index, gainers and losers, and the latest crypto news from CoinDesk, Cointelegraph, Decrypt, and The Block.",
+    "Live cryptocurrency prices, market stats, fear & greed index, gainers and losers, plus crypto and finance news from CoinDesk, Cointelegraph, CNBC, and MarketWatch.",
   alternates: { canonical: "/" },
 };
 
@@ -57,7 +57,7 @@ export default async function Home() {
   return (
     <MarketProvider>
       <Ticker />
-      <HeroPrice />
+      <HeroPrice stats={stats} />
 
       <main className="flex-1 space-y-12 py-10">
         <section className="mx-auto max-w-5xl px-4">
@@ -94,10 +94,13 @@ export default async function Home() {
 
         <section id="news" className="mx-auto max-w-5xl px-4">
           <SectionHeading
-            title="Latest Crypto News"
-            note="CoinDesk · Cointelegraph · Decrypt · The Block"
+            title="Latest News"
+            note="CoinDesk · Cointelegraph · CNBC · MarketWatch"
           />
-          <NewsCarousel items={news} />
+          <NewsCarousel label="Crypto News" items={news.crypto} />
+          <div className="mt-5">
+            <NewsCarousel label="Finance News" items={news.finance} />
+          </div>
         </section>
 
         <section className="mx-auto max-w-5xl px-4">

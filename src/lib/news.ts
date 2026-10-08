@@ -1,15 +1,39 @@
 import { XMLParser } from "fast-xml-parser";
 import type { NewsItem } from "@/types";
 
-const FEEDS = [
+const CRYPTO_FEEDS = [
   { source: "CoinDesk", url: "https://www.coindesk.com/arc/outboundfeeds/rss/" },
   { source: "Cointelegraph", url: "https://cointelegraph.com/rss" },
   { source: "Decrypt", url: "https://decrypt.co/feed" },
   { source: "The Block", url: "https://www.theblock.co/rss.xml" },
 ] as const;
 
+const FINANCE_FEEDS = [
+  {
+    source: "CNBC",
+    url: "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+  },
+  {
+    source: "MarketWatch",
+    url: "https://feeds.content.dowjones.io/public/rss/mw_topstories",
+  },
+  {
+    source: "WSJ Markets",
+    url: "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
+  },
+] as const;
+
+const FEEDS = [
+  ...CRYPTO_FEEDS.map((feed) => ({ ...feed, category: "crypto" as const })),
+  ...FINANCE_FEEDS.map((feed) => ({ ...feed, category: "finance" as const })),
+];
+
+export interface NewsBundle {
+  crypto: NewsItem[];
+  finance: NewsItem[];
+}
+
 const MAX_ITEMS_PER_FEED = 15;
-const MAX_TOTAL_ITEMS = 12;
 
 const parser = new XMLParser({
   ignoreAttributes: false,
@@ -109,7 +133,11 @@ function extractImage(item: RawItem): string | undefined {
   return undefined;
 }
 
-function normalizeItem(item: RawItem, source: string): NewsItem | null {
+function normalizeItem(
+  item: RawItem,
+  source: string,
+  category: "crypto" | "finance",
+): NewsItem | null {
   if (!item.title || !item.link) return null;
 
   const publishedAt = Date.parse(item.pubDate ?? item.date ?? "");
@@ -121,6 +149,7 @@ function normalizeItem(item: RawItem, source: string): NewsItem | null {
     title: cleanText(String(item.title)),
     link,
     source,
+    category,
     publishedAt: Number.isNaN(publishedAt) ? 0 : publishedAt,
     image: extractImage(item),
   };
@@ -157,26 +186,33 @@ async function fetchFeed(feed: (typeof FEEDS)[number]): Promise<NewsItem[]> {
 
   return rawItems
     .slice(0, MAX_ITEMS_PER_FEED)
-    .map((item) => normalizeItem(item, feed.source))
+    .map((item) => normalizeItem(item, feed.source, feed.category))
     .filter((item): item is NewsItem => item !== null);
 }
 
-export async function getNews(limit = MAX_TOTAL_ITEMS): Promise<NewsItem[]> {
+export async function getNews(perCategory = 10): Promise<NewsBundle> {
   const results = await Promise.allSettled(FEEDS.map(fetchFeed));
 
   const seen = new Set<string>();
-  const items: NewsItem[] = [];
+  const crypto: NewsItem[] = [];
+  const finance: NewsItem[] = [];
 
   for (const result of results) {
     if (result.status !== "fulfilled") continue;
     for (const item of result.value) {
       if (seen.has(item.link)) continue;
       seen.add(item.link);
-      items.push(item);
+      (item.category === "finance" ? finance : crypto).push(item);
     }
   }
 
-  items.sort((a, b) => b.publishedAt - a.publishedAt);
+  const newestFirst = (a: NewsItem, b: NewsItem) =>
+    b.publishedAt - a.publishedAt;
+  crypto.sort(newestFirst);
+  finance.sort(newestFirst);
 
-  return items.slice(0, limit);
+  return {
+    crypto: crypto.slice(0, perCategory),
+    finance: finance.slice(0, perCategory),
+  };
 }

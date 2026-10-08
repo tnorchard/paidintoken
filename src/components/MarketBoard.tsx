@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMarket } from "./MarketProvider";
 import { StarButton } from "./StarButton";
 import { changeClass, formatCompactUsd, formatPercent, formatUsd } from "@/lib/format";
+import type { Coin } from "@/types";
+
+type SortKey = "rank" | "name" | "price" | "change" | "cap" | "high";
+type SortState = { key: SortKey; dir: "asc" | "desc" };
 
 function PlaceholderRow({ rank }: { rank: number }) {
   return (
@@ -23,46 +27,171 @@ function PlaceholderRow({ rank }: { rank: number }) {
   );
 }
 
+function SortableHeader({
+  label,
+  sortKey,
+  current,
+  onSort,
+  className = "",
+}: {
+  label: React.ReactNode;
+  sortKey: SortKey;
+  current: SortState | null;
+  onSort: (key: SortKey) => void;
+  className?: string;
+}) {
+  const active = current?.key === sortKey;
+  const ariaSort = active
+    ? current.dir === "asc"
+      ? "ascending"
+      : "descending"
+    : "none";
+
+  return (
+    <th scope="col" aria-sort={ariaSort} className={className}>
+      <button
+        type="button"
+        onClick={() => onSort(sortKey)}
+        className={`flex w-full items-center gap-1 uppercase tracking-wider transition hover:text-accent ${
+          active ? "text-ink" : "text-muted hover:text-accent"
+        }`}
+      >
+        <span>{label}</span>
+        <span
+          aria-hidden="true"
+          className={`text-[9px] ${active ? "opacity-100" : "opacity-40"}`}
+        >
+          {active && current.dir === "asc" ? "▲" : "▼"}
+        </span>
+        <span className="sr-only">
+          {active && current.dir === "asc"
+            ? " (sorted ascending, activate to sort descending)"
+            : " (activate to sort)"}
+        </span>
+      </button>
+    </th>
+  );
+}
+
+function sortValue(
+  coin: Coin,
+  key: SortKey,
+  rankMap: Map<string, number>,
+): number | string | null {
+  switch (key) {
+    case "rank":
+      return rankMap.get(coin.id) ?? null;
+    case "name":
+      return coin.name.toLowerCase();
+    case "price":
+      return coin.currentPrice;
+    case "change":
+      return coin.priceChange24hPercent;
+    case "cap":
+      return coin.marketCap;
+    case "high":
+      return coin.high24h;
+  }
+}
+
 export function MarketBoard() {
   const { markets } = useMarket();
   const [expanded, setExpanded] = useState(false);
+  const [sort, setSort] = useState<SortState | null>(null);
+
+  const rankMap = useMemo(
+    () =>
+      new Map<string, number>(
+        (markets?.universe ?? []).map((coin, index) => [coin.id, index + 1]),
+      ),
+    [markets],
+  );
+
+  const sourceCoins = !markets
+    ? null
+    : expanded
+      ? markets.universe
+      : markets.coins;
+
+  const coins = useMemo(() => {
+    if (!sourceCoins || !sort) return sourceCoins;
+    const factor = sort.dir === "asc" ? 1 : -1;
+    return [...sourceCoins].sort((a, b) => {
+      const va = sortValue(a, sort.key, rankMap);
+      const vb = sortValue(b, sort.key, rankMap);
+      if (va === null && vb === null) return 0;
+      if (va === null) return 1;
+      if (vb === null) return -1;
+      if (typeof va === "string" || typeof vb === "string") {
+        return String(va).localeCompare(String(vb)) * factor;
+      }
+      return (va - vb) * factor;
+    });
+  }, [sourceCoins, sort, rankMap]);
+
+  const toggleSort = (key: SortKey) => {
+    setSort((prev) => {
+      if (prev?.key === key) {
+        return { key, dir: prev.dir === "asc" ? "desc" : "asc" };
+      }
+      return { key, dir: key === "rank" || key === "name" ? "asc" : "desc" };
+    });
+  };
 
   const universeSize = markets?.universe.length ?? 0;
-  const coins = !markets ? null : expanded ? markets.universe : markets.coins;
 
   return (
     <div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] border-collapse text-sm">
           <caption className="sr-only">
-            Top cryptocurrencies by market cap with live USD prices
+            Top cryptocurrencies by market cap with live USD prices — tap
+            column headers to sort
           </caption>
           <thead>
-            <tr className="border-b-2 border-ink text-left text-xs uppercase tracking-wider">
-              <th scope="col" className="py-2 pr-4 font-medium">
-                #
-              </th>
-              <th scope="col" className="py-2 pr-4 font-medium">
-                Coin
-              </th>
-              <th scope="col" className="py-2 pr-4 text-right font-medium">
-                Price
-              </th>
-              <th scope="col" className="py-2 pr-4 text-right font-medium">
-                24h
-              </th>
-              <th
-                scope="col"
-                className="hidden py-2 pr-4 text-right font-medium md:table-cell"
-              >
-                Market Cap
-              </th>
-              <th
-                scope="col"
-                className="hidden py-2 pr-4 text-right font-medium md:table-cell"
-              >
-                24h High / Low
-              </th>
+            <tr className="border-b-2 border-ink text-left text-xs font-medium uppercase tracking-wider">
+              <SortableHeader
+                label="#"
+                sortKey="rank"
+                current={sort}
+                onSort={toggleSort}
+                className="py-2 pr-4"
+              />
+              <SortableHeader
+                label="Coin"
+                sortKey="name"
+                current={sort}
+                onSort={toggleSort}
+                className="py-2 pr-4"
+              />
+              <SortableHeader
+                label="Price"
+                sortKey="price"
+                current={sort}
+                onSort={toggleSort}
+                className="py-2 pr-4 text-right"
+              />
+              <SortableHeader
+                label="24h"
+                sortKey="change"
+                current={sort}
+                onSort={toggleSort}
+                className="py-2 pr-4 text-right"
+              />
+              <SortableHeader
+                label="Market Cap"
+                sortKey="cap"
+                current={sort}
+                onSort={toggleSort}
+                className="hidden py-2 pr-4 text-right md:table-cell"
+              />
+              <SortableHeader
+                label="24h High / Low"
+                sortKey="high"
+                current={sort}
+                onSort={toggleSort}
+                className="hidden py-2 pr-4 text-right md:table-cell"
+              />
               <th scope="col" className="py-2 text-right font-medium">
                 <span className="sr-only">Watchlist</span>
               </th>
@@ -78,7 +207,9 @@ export function MarketBoard() {
                     key={coin.id}
                     className="border-b border-line transition hover:bg-card"
                   >
-                    <td className="py-2.5 pr-4 text-muted">{index + 1}</td>
+                    <td className="py-2.5 pr-4 text-muted tabular-nums">
+                      {rankMap.get(coin.id) ?? index + 1}
+                    </td>
                     <td className="py-2.5 pr-4">
                       <span className="flex items-center gap-2">
                         <Image
