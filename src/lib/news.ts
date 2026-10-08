@@ -23,14 +23,31 @@ const FINANCE_FEEDS = [
   },
 ] as const;
 
+const VENTURE_FEEDS = [
+  {
+    source: "TechCrunch AI",
+    url: "https://techcrunch.com/category/artificial-intelligence/feed/",
+  },
+  {
+    source: "TechCrunch VC",
+    url: "https://techcrunch.com/category/venture/feed/",
+  },
+  {
+    source: "VentureBeat",
+    url: "https://venturebeat.com/feed/",
+  },
+] as const;
+
 const FEEDS = [
   ...CRYPTO_FEEDS.map((feed) => ({ ...feed, category: "crypto" as const })),
   ...FINANCE_FEEDS.map((feed) => ({ ...feed, category: "finance" as const })),
+  ...VENTURE_FEEDS.map((feed) => ({ ...feed, category: "venture" as const })),
 ];
 
 export interface NewsBundle {
   crypto: NewsItem[];
   finance: NewsItem[];
+  venture: NewsItem[];
 }
 
 const MAX_ITEMS_PER_FEED = 15;
@@ -136,7 +153,7 @@ function extractImage(item: RawItem): string | undefined {
 function normalizeItem(
   item: RawItem,
   source: string,
-  category: "crypto" | "finance",
+  category: "crypto" | "finance" | "venture",
 ): NewsItem | null {
   if (!item.title || !item.link) return null;
 
@@ -190,19 +207,71 @@ async function fetchFeed(feed: (typeof FEEDS)[number]): Promise<NewsItem[]> {
     .filter((item): item is NewsItem => item !== null);
 }
 
+const MAX_ENRICHMENTS = 12;
+const ENRICH_CONCURRENCY = 6;
+
+async function extractOgImage(url: string): Promise<string | undefined> {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        accept: "text/html,application/xhtml+xml,*/*",
+      },
+      signal: AbortSignal.timeout(8000),
+      next: { revalidate: 86400 },
+    });
+    if (!response.ok) return undefined;
+
+    const html = await response.text();
+    const match =
+      html.match(
+        /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+      ) ??
+      html.match(
+        /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+      );
+    if (!match) return undefined;
+
+    const image = decodeEntities(match[1]).trim();
+    if (!/^https?:\/\//i.test(image)) return undefined;
+
+    return image.replace("w=1920&h=1080", "w=640&h=360");
+  } catch {
+    return undefined;
+  }
+}
+
+async function enrichMissingImages(items: NewsItem[]): Promise<void> {
+  const missing = items.filter((item) => !item.image).slice(0, MAX_ENRICHMENTS);
+
+  for (let i = 0; i < missing.length; i += ENRICH_CONCURRENCY) {
+    const batch = missing.slice(i, i + ENRICH_CONCURRENCY);
+    await Promise.all(
+      batch.map(async (item) => {
+        const image = await extractOgImage(item.link);
+        if (image) item.image = image;
+      }),
+    );
+  }
+}
+
 export async function getNews(perCategory = 10): Promise<NewsBundle> {
   const results = await Promise.allSettled(FEEDS.map(fetchFeed));
 
   const seen = new Set<string>();
   const crypto: NewsItem[] = [];
   const finance: NewsItem[] = [];
+  const venture: NewsItem[] = [];
 
   for (const result of results) {
     if (result.status !== "fulfilled") continue;
     for (const item of result.value) {
       if (seen.has(item.link)) continue;
       seen.add(item.link);
-      (item.category === "finance" ? finance : crypto).push(item);
+      if (item.category === "finance") finance.push(item);
+      else if (item.category === "venture") venture.push(item);
+      else crypto.push(item);
     }
   }
 
@@ -210,9 +279,19 @@ export async function getNews(perCategory = 10): Promise<NewsBundle> {
     b.publishedAt - a.publishedAt;
   crypto.sort(newestFirst);
   finance.sort(newestFirst);
+  venture.sort(newestFirst);
 
-  return {
+  const bundle: NewsBundle = {
     crypto: crypto.slice(0, perCategory),
     finance: finance.slice(0, perCategory),
+    venture: venture.slice(0, perCategory),
   };
+
+  await enrichMissingImages([
+    ...bundle.crypto,
+    ...bundle.finance,
+    ...bundle.venture,
+  ]);
+
+  return bundle;
 }

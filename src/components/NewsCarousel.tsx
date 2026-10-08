@@ -23,7 +23,7 @@ function CardImage({ item }: { item: NewsItem }) {
 
   if (!item.image || failed) {
     return (
-      <div className="flex h-40 items-center justify-center bg-gradient-to-br from-line to-card">
+      <div className="flex h-32 items-center justify-center bg-gradient-to-br from-line to-card">
         <span className="text-3xl font-bold text-muted">{item.source[0]}</span>
       </div>
     );
@@ -35,19 +35,13 @@ function CardImage({ item }: { item: NewsItem }) {
       src={item.image}
       alt=""
       loading="lazy"
-      className="h-40 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+      className="h-32 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
       onError={() => setFailed(true)}
     />
   );
 }
 
-export function NewsCarousel({
-  items,
-  label,
-}: {
-  items: NewsItem[];
-  label?: string;
-}) {
+export function NewsCarousel({ items, label }: { items: NewsItem[]; label?: string }) {
   if (items.length === 0) {
     return (
       <div>
@@ -71,19 +65,19 @@ export function NewsCarousel({
         </h3>
       )}
       <div className="relative">
-        <div className="pit-hscroll -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-3">
+        <div className="pit-hscroll -mx-4 flex gap-3 overflow-x-auto px-4 pb-3">
           {items.map((item) => (
             <a
               key={item.link}
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-[290px] shrink-0 snap-start overflow-hidden rounded-lg border border-line bg-card transition duration-200 hover:-translate-y-1 hover:border-accent sm:w-[320px]"
+              className="group w-[240px] shrink-0 overflow-hidden rounded-lg border border-line bg-card transition duration-200 hover:-translate-y-1 hover:border-accent sm:w-[260px]"
             >
               <div className="overflow-hidden">
                 <CardImage item={item} />
               </div>
-              <div className="p-3.5">
+              <div className="p-3">
                 <div className="flex items-center justify-between gap-2">
                   <span className="border border-ink px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider">
                     {item.source}
@@ -100,7 +94,7 @@ export function NewsCarousel({
                     {timeAgo(item.publishedAt)}
                   </time>
                 </div>
-                <h3 className="mt-2 line-clamp-3 text-sm font-medium leading-snug group-hover:underline">
+                <h3 className="mt-2 line-clamp-2 text-sm font-medium leading-snug group-hover:underline">
                   {item.title}
                 </h3>
               </div>

@@ -66,7 +66,18 @@ export interface NewsItem {
   title: string;
   link: string;
   source: string;
-  category: "crypto" | "finance";
+  category: "crypto" | "finance" | "venture";
   publishedAt: number;
   image?: string;
+}
+
+export interface VentureRound {
+  url: string;
+  title: string;
+  publishedAt: number;
+  company: string | null;
+  raised: string | null;
+  lead: string | null;
+  round: string | null;
+  unicorn: boolean;
 }

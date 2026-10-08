@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { MarketProvider } from "@/components/MarketProvider";
 import { Ticker } from "@/components/Ticker";
 import { HeroPrice } from "@/components/HeroPrice";
@@ -12,9 +13,15 @@ import { WatchlistStrip } from "@/components/WatchlistStrip";
 import { HalvingCountdown } from "@/components/HalvingCountdown";
 import { FaqTeaser } from "@/components/FaqTeaser";
 import { PriceChart } from "@/components/PriceChart";
+import { MarketCapNote } from "@/components/MarketCapNote";
+import { StocksBoard } from "@/components/StocksBoard";
+import { MarketClocks } from "@/components/MarketClocks";
+import { VcRounds } from "@/components/VcRounds";
 import { getNews } from "@/lib/news";
 import { getMarketStats } from "@/lib/stats";
 import { getCoinChart } from "@/lib/coins";
+import { getStockQuotes } from "@/lib/stocks";
+import { getVentureRounds } from "@/lib/vc";
 
 export const revalidate = 300;
 
@@ -32,7 +39,7 @@ function SectionHeading({
 }: {
   id?: string;
   title: string;
-  note?: string;
+  note?: ReactNode;
 }) {
   return (
     <div className="mb-3 flex items-baseline justify-between gap-4">
@@ -42,17 +49,20 @@ function SectionHeading({
       >
         {title}
       </h2>
-      {note && <p className="hidden text-xs text-muted sm:block">{note}</p>}
+      {note && <div className="hidden text-xs text-muted sm:block">{note}</div>}
     </div>
   );
 }
 
 export default async function Home() {
-  const [news, stats, btcChart] = await Promise.all([
-    getNews(),
-    getMarketStats(),
-    getCoinChart("bitcoin"),
-  ]);
+  const [news, stats, btcChart, stockQuotes, ventureRounds] =
+    await Promise.all([
+      getNews(),
+      getMarketStats(),
+      getCoinChart("bitcoin"),
+      getStockQuotes(),
+      getVentureRounds(),
+    ]);
 
   return (
     <MarketProvider>
@@ -60,8 +70,13 @@ export default async function Home() {
       <HeroPrice stats={stats} />
 
       <main className="flex-1 space-y-12 py-10">
-        <section className="mx-auto max-w-5xl px-4">
-          <StatsStrip stats={stats} />
+        <section id="news" className="space-y-1 px-4">
+          <SectionHeading
+            title="Latest News"
+            note="CoinDesk · Cointelegraph · CNBC · MarketWatch"
+          />
+          <NewsCarousel label="Crypto News" items={news.crypto} />
+          <NewsCarousel label="Finance News" items={news.finance} />
         </section>
 
         <section className="mx-auto max-w-5xl px-4">
@@ -75,7 +90,7 @@ export default async function Home() {
         <section id="markets" className="mx-auto max-w-5xl px-4">
           <SectionHeading
             title="Market Prices"
-            note="LIVE · updates every 60s"
+            note={<MarketCapNote stats={stats} />}
           />
           <WatchlistStrip />
           <MarketBoard />
@@ -92,15 +107,20 @@ export default async function Home() {
           <MoversBoard />
         </section>
 
-        <section id="news" className="mx-auto max-w-5xl px-4">
+        <section className="mx-auto max-w-5xl px-4">
+          <StatsStrip stats={stats} />
+        </section>
+
+        <section className="mx-auto max-w-5xl px-4">
           <SectionHeading
-            title="Latest News"
-            note="CoinDesk · Cointelegraph · CNBC · MarketWatch"
+            title="Stocks & Markets"
+            note="Indices · megacaps · commodities · FX"
           />
-          <NewsCarousel label="Crypto News" items={news.crypto} />
-          <div className="mt-5">
-            <NewsCarousel label="Finance News" items={news.finance} />
-          </div>
+          <StocksBoard quotes={stockQuotes} />
+          <p className="mt-4 mb-2 text-xs font-bold uppercase tracking-wider text-muted">
+            Market Clocks
+          </p>
+          <MarketClocks />
         </section>
 
         <section className="mx-auto max-w-5xl px-4">
@@ -125,6 +145,22 @@ export default async function Home() {
 
         <section className="mx-auto max-w-5xl px-4">
           <OgTeaser />
+        </section>
+
+        <section className="mx-auto max-w-5xl px-4">
+          <SectionHeading
+            title="Venture Capital"
+            note="Recent rounds parsed from TechCrunch Venture"
+          />
+          <VcRounds rounds={ventureRounds} />
+        </section>
+
+        <section id="venture-news" className="space-y-1 px-4">
+          <SectionHeading
+            title="AI & VC News"
+            note="TechCrunch · VentureBeat"
+          />
+          <NewsCarousel items={news.venture} />
         </section>
       </main>
     </MarketProvider>
