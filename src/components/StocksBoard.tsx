@@ -13,7 +13,7 @@ function formatPrice(value: number): string {
 
 function QuoteCell({ quote }: { quote: StockQuote }) {
   return (
-    <div className="bg-card p-3">
+    <div className="bg-surface p-3">
       <p className="text-[11px] font-bold uppercase tracking-wider text-muted">
         {quote.label}
       </p>
@@ -41,7 +41,7 @@ function QuoteCell({ quote }: { quote: StockQuote }) {
 
 export function StocksBoard({ quotes }: { quotes: StockQuote[] }) {
   return (
-    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3 lg:grid-cols-6">
+    <div className="grid grid-cols-2 gap-0.5 overflow-hidden rounded-lg border-2 border-ink bg-ink sm:grid-cols-3 lg:grid-cols-6">
       {quotes.map((quote) => (
         <QuoteCell key={quote.symbol} quote={quote} />
       ))}

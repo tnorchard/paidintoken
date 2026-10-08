@@ -60,11 +60,11 @@ export function MarketClocks() {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-0.5 overflow-hidden rounded-lg border-2 border-ink bg-ink sm:grid-cols-4">
       {CITIES.map((city) => {
         const clock = now ? readClock(city, now) : null;
         return (
-          <div key={city.label} className="bg-card p-3">
+          <div key={city.label} className="bg-surface p-3">
             <p className="text-[11px] font-bold uppercase tracking-wider text-muted">
               {city.label}
             </p>
@@ -76,7 +76,7 @@ export function MarketClocks() {
                 className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
                   clock?.open
                     ? "bg-up text-surface"
-                    : "bg-line text-muted"
+                    : "border border-ink text-ink"
                 }`}
               >
                 {clock ? (clock.open ? "Open" : "Closed") : "—"}

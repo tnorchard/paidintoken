@@ -28,7 +28,7 @@ export function Ticker() {
 
   if (!markets || markets.coins.length === 0) {
     return (
-      <div className="pit-marquee overflow-hidden border-b border-line bg-card">
+      <div className="pit-marquee overflow-hidden border-b-2 border-ink">
         <div className="flex whitespace-nowrap">
           <span className="px-5 py-2 text-sm text-muted">
             Loading live prices…
@@ -42,7 +42,7 @@ export function Ticker() {
 
   return (
     <div
-      className="pit-marquee overflow-hidden border-b border-line bg-card"
+      className="pit-marquee overflow-hidden border-b-2 border-ink"
       aria-hidden="true"
     >
       <div className="pit-marquee-track flex w-max whitespace-nowrap">

@@ -10,7 +10,7 @@ function formatCount(value: number): string {
 
 export function StatsStrip({ stats }: { stats: MarketStats }) {
   return (
-    <section className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+    <section className="grid grid-cols-1 gap-0.5 overflow-hidden rounded-lg border-2 border-ink bg-ink sm:grid-cols-2 lg:grid-cols-4">
       <StatCell
         label="BTC Dominance"
         value={

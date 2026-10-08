@@ -18,7 +18,7 @@ export function StatCell({
   sub?: ReactNode;
 }) {
   return (
-    <div className="bg-card p-4">
+    <div className="bg-surface p-4">
       <p className="text-[11px] font-bold uppercase tracking-wider text-muted">
         {label}
       </p>

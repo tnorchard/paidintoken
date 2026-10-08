@@ -3,7 +3,7 @@
 import { useMarket } from "./MarketProvider";
 import { CountUp } from "./CountUp";
 import { StatCell, fearGreedColor } from "./StatCell";
-import { formatCompactUsd, formatPercent, formatUsd } from "@/lib/format";
+import { changeClass, formatCompactUsd, formatPercent, formatUsd } from "@/lib/format";
 import type { MarketStats } from "@/types";
 
 function formatPrice(value: number | undefined): string {
@@ -19,7 +19,7 @@ function FearGreedCard({
   const fg = stats.fearGreed;
 
   return (
-    <div className="bg-card p-4">
+    <div className="bg-surface p-4">
       <p className="text-[11px] font-bold uppercase tracking-wider text-muted">
         Fear &amp; Greed Index
       </p>
@@ -38,7 +38,7 @@ function FearGreedCard({
           </p>
           <div className="relative mt-2 h-2 rounded-full bg-gradient-to-r from-red-500 via-yellow-400 to-green-500">
             <span
-              className="absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-card bg-white"
+              className="absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-surface bg-white"
               style={{ left: `${fg.value}%` }}
               aria-hidden="true"
             />
@@ -73,7 +73,10 @@ function FearGreedCard({
 }
 
 export function HeroPrice({ stats }: { stats: MarketStats }) {
-  const { btc } = useMarket();
+  const { btc, markets } = useMarket();
+
+  const eth = markets?.coins.find((coin) => coin.id === "ethereum");
+  const sol = markets?.coins.find((coin) => coin.id === "solana");
 
   const last = btc?.last;
   const high = btc?.high;
@@ -129,6 +132,42 @@ export function HeroPrice({ stats }: { stats: MarketStats }) {
               </div>
             </div>
 
+            {(eth || sol) && (
+              <p className="mt-3 flex flex-wrap items-baseline gap-x-5 gap-y-1 text-sm text-muted">
+                {eth && (
+                  <span className="flex items-baseline gap-2">
+                    <span className="font-bold uppercase tracking-wider">
+                      Ethereum
+                    </span>
+                    <span className="font-semibold tabular-nums text-ink">
+                      ${formatPrice(eth.currentPrice)}
+                    </span>
+                    <span
+                      className={`font-semibold tabular-nums ${changeClass(eth.priceChange24hPercent)}`}
+                    >
+                      {formatPercent(eth.priceChange24hPercent)}
+                    </span>
+                  </span>
+                )}
+                {sol && (
+                  <span className="flex items-baseline gap-2">
+                    <span className="font-bold uppercase tracking-wider">
+                      Solana
+                    </span>
+                    <span className="font-semibold tabular-nums text-ink">
+                      ${formatPrice(sol.currentPrice)}
+                    </span>
+                    <span
+                      className={`font-semibold tabular-nums ${changeClass(sol.priceChange24hPercent)}`}
+                    >
+                      {formatPercent(sol.priceChange24hPercent)}
+                    </span>
+                  </span>
+                )}
+                <span>· 24h</span>
+              </p>
+            )}
+
             {range !== null && high !== undefined && low !== undefined && (
               <div className="mt-8 max-w-xl">
                 <div className="relative h-1.5 rounded-full bg-line">
@@ -152,7 +191,7 @@ export function HeroPrice({ stats }: { stats: MarketStats }) {
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-px self-start overflow-hidden rounded-lg border border-line bg-line">
+          <div className="grid grid-cols-2 gap-0.5 self-start overflow-hidden rounded-lg border-2 border-ink bg-ink">
             <StatCell
               label="Total Crypto Market Cap"
               value={
